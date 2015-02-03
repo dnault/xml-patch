@@ -1,0 +1,43 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '1.2.0'
+}
+
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+version = "0.1.0"
+group = "net.sf.xmlpatchops4j"
+
+repositories {
+    jcenter()
+}
+
+tasks.withType(Tar){
+    compression = Compression.GZIP
+}
+
+dependencies {
+    compile "commons-io:commons-io:2.4"
+    compile "org.jdom:jdom:1.1.3"
+    compile "jaxen:jaxen:1.1.4"
+    compile "net.sf.jopt-simple:jopt-simple:4.3"
+
+    testCompile "junit:junit:4.11"
+}
+
+mainClassName = "net.sf.xmlpatchops4j.CommandLineDriver"
+
+jar {
+    manifest {
+        attributes("Main-Class": mainClassName)
+    }
+}
+
+shadowJar {
+    ['org.apache.commons', 'org.jaxen', 'org.jdom', 'org.joptsimple'].each {
+        relocate it, "net.sf.xmlpatchops4j.repackaged.${it}"
+    }
+}

@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testCases>
+
+    <!-- Whitespace is significant. Reformat this document at your peril. -->
+
+    <test desc="XPath engine distinguishes between unqualified and default namespace">
+        <target><doc><bar><foo xmlns="urn:test"><bar/></foo></bar></doc></target>
+        <diff><add sel="//bar" pos="prepend"><child/></add></diff>
+        <result><doc><bar><child/><foo xmlns="urn:test"><bar/></foo></bar></doc></result>
+    </test>
+    
+    <test desc="Append an element">
+        <target>
+            <doc>
+                <note>This is a sample document</note>
+            </doc>
+        </target>
+        
+        <diff>
+            <add sel="doc"><foo id='ert4773'>This is a new child</foo></add>
+        </diff>
+        
+        <result>
+            <doc>
+                <note>This is a sample document</note>
+            <foo id='ert4773'>This is a new child</foo></doc>        
+        </result>
+    </test>
+
+    <test desc="Append multiple elements">
+        <target><doc><note/><note/></doc></target>
+        <diff><add msel="doc/note"><child/></add></diff>
+        <result><doc><note><child/></note><note><child/></note></doc></result>
+    </test>
+
+    <test desc="Append qualified element [namespace declared in element]">
+        <target><doc/></target>
+        <diff><add sel="doc"><x:foo xmlns:x="ns:test"/></add></diff>
+        <result><doc><x:foo xmlns:x="ns:test"/></doc></result>
+    </test>
+
+    <!-- not sure this is correct
+    <test desc="Namespace prefix in selector">
+        <target><b:doc xmlns:b="urn:test"><foo/></b:doc></target>
+        <diff><add sel="b:doc/foo"><bar/></add></diff>
+        <result><b:doc xmlns:b="urn:test"><foo><bar/></foo></b:doc></result>
+    </test>
+    -->
+
+    
+    <test desc="Append qualified element [namespace declared in diff]">
+        <target><doc/></target>
+        <diff xmlns:x="ns:test"><add sel="doc"><x:foo/></add></diff>
+        <result><doc><x:foo xmlns:x="ns:test"/></doc></result>
+    </test>
+    
+    <test desc="Append to non-existent parent">
+        <target><doc/></target>        
+        <diff><add sel="doc3"><foo/></add></diff>
+        <result error="UNLOCATED_NODE"/>
+    </test>
+
+    <test desc="Add comment before root">     
+        <target><doc/></target>
+        <diff><add sel='doc' pos='before'><!-- comment --></add></diff>
+        <result><!-- comment --><doc/></result>
+    </test>
+    
+    <test desc="Add processing instruction before root">     
+        <target><doc/></target>
+        <diff><add sel='doc' pos='before'><?pi?></add></diff>
+        <result><?pi?><doc/></result>
+    </test>
+
+    <test desc="Add text before root">
+        <!-- JDOM even disallows adding whitespace to the prolog :-p -->
+        <target><doc/></target>
+        <diff><add sel='doc' pos='before'>hello</add></diff>
+        <result error="INVALID_ROOT_ELEMENT_OPERATION"/>
+    </test>
+    
+    <test desc="Add namespace declaration">
+        <target><doc/></target>
+        <diff><add sel="doc" type="namespace::pref">urn:ns:xxx</add></diff>
+        <result><doc xmlns:pref="urn:ns:xxx"/></result>
+    </test>
+    
+    <!-- should this be legal?
+    <test desc="Add default namespace declaration">
+        <target><doc/></target>
+        <diff><add sel="doc" type="namespace::">urn:ns:xxx</add></diff>
+        <result><doc xmlns="urn:ns:xxx"/></result>
+    </test>
+     -->
+    
+    <test desc="Add namespace declaration with empty URI">
+        <target><doc/></target>
+        <diff><add sel="doc" type="namespace::pref"></add></diff>
+        <result error="INVALID_NAMESPACE_URI"/>
+    </test>
+    
+    <test desc="Replace namespace declaration URI">
+        <target><doc xmlns:pref="urn:test"><pref:foo a="1">sample</pref:foo></doc></target>
+        <diff><replace sel="doc/namespace::pref">urn:new:xxx</replace></diff>
+        <result><doc xmlns:pref="urn:new:xxx"><pref:foo a="1">sample</pref:foo></doc></result>
+    </test>
+    
+    <test desc="Replace namespace URI with empty string">
+        <target><doc xmlns:pref="urn:test"><pref:foo a="1">sample</pref:foo></doc></target>
+        <diff><replace sel="doc/namespace::pref"></replace></diff>
+        <result error="INVALID_NAMESPACE_URI"/>
+    </test>
+    
+    <test desc="Replace element's own namespace declaration URI">
+        <target><pref:doc xmlns:pref="urn:test"><pref:foo a="1">sample</pref:foo></pref:doc></target>
+        <diff><replace sel="*/namespace::pref">urn:new:xxx</replace></diff>
+        <result><pref:doc xmlns:pref="urn:new:xxx"><pref:foo a="1">sample</pref:foo></pref:doc></result>
+    </test>
+    
+    <test desc="Replace parent's namespace declaration URI">
+        <target><doc xmlns:pref="urn:test"><foo a="1">sample</foo></doc></target>
+        <diff><replace sel="doc/foo/namespace::pref">urn:new:xxx</replace></diff>
+        <result error="UNLOCATED_NODE"/>
+    </test>
+    
+    <test desc="Replace namespace [unlocated]">
+        <target><doc xmlns:pref="urn:test"><foo a="1">sample</foo></doc></target>
+        <diff><replace sel="doc/namespace::bogus">urn:new:xxx</replace></diff>
+        <result error="UNLOCATED_NODE"/>
+    </test>
+    
+    <test desc="Replace attribute value">
+        <target><doc><foo a="1">sample</foo></doc></target>
+        <diff><replace sel="doc/foo/@a">one</replace></diff>
+        <result><doc><foo a="one">sample</foo></doc></result>
+    </test>
+
+    <test desc="Replace multiple attribute values">
+        <target><doc><foo a="1"/><bar a="1"/></doc></target>
+        <diff><replace msel="doc//@a">2</replace></diff>
+        <result><doc><foo a="2"/><bar a="2"/></doc></result>
+    </test>
+    
+    <test desc="Replace attribute value with element">
+        <target><doc><foo a="1">sample</foo></doc></target>
+        <diff><replace sel="doc/foo/@a"><one/></replace></diff>
+        <result error="INVALID_NODE_TYPES"/>
+    </test>
+    
+    <test desc="Replace root element">
+        <target><doc><foo a="1">sample</foo></doc></target>
+        <diff><replace sel="doc"><cod><foo a="2">replacement</foo></cod></replace></diff>
+        <result><cod><foo a="2">replacement</foo></cod></result>
+    </test>
+    
+    <test desc="Replace with qualified element">
+        <target><doc><foo a="1">sample</foo></doc></target>
+        <diff><replace xmlns:a="urn:test" sel="doc/foo"><a:bar a:size="2"/></replace></diff>
+        <result><doc><a:bar xmlns:a="urn:test" a:size="2"/></doc></result>
+    </test>
+    
+    <test desc="Replace with qualified element, same uri different prefix">
+        <target><doc xmlns:b="urn:test"><foo a="1">sample</foo></doc></target>
+        <diff><replace xmlns:a="urn:test" sel="*/foo"><a:bar><a:foo a:size="2"/></a:bar></replace></diff>
+        <result><doc xmlns:b="urn:test"><b:bar><b:foo b:size="2"/></b:bar></doc></result>
+    </test>
+    
+    <test desc="Replace element with processing instruction element">
+        <target><doc><foo a="1">sample</foo></doc></target>
+        <diff><replace sel="doc/foo"><?hahaha?></replace></diff>
+        <result error="INVALID_NODE_TYPES"/>
+    </test>
+
+    <test desc="Replace multiple elements">
+        <target><doc><note/><note/></doc></target>
+        <diff><replace msel="doc/note"><foo/></replace></diff>
+        <result><doc><foo/><foo/></doc></result>
+    </test>
+
+    <test desc="Replace element with 2 elements">
+        <target><doc><foo a="1">sample</foo></doc></target>
+        <diff><replace sel="doc/foo"><hahaha/><hiho/></replace></diff>
+        <result error="INVALID_NODE_TYPES"/>
+    </test>
+    
+    <test desc="Replace processing instruction">
+        <target><doc><?yo?><foo a="1">sample</foo></doc></target>
+        <diff><replace sel="doc/processing-instruction('yo')"><?hahaha?></replace></diff>
+        <result><doc><?hahaha?><foo a="1">sample</foo></doc></result>
+    </test>
+    
+    <test desc="Replace comment">
+        <target><doc><foo a="1"><!-- abra -->sample</foo></doc></target>
+        <diff><replace sel="doc/foo/comment()[1]"><!-- cadabra --></replace></diff>
+        <result><doc><foo a="1"><!-- cadabra -->sample</foo></doc></result>
+    </test>
+    
+    <test desc="Replace text">
+        <target><doc><foo a="1">sample</foo></doc></target>
+        <diff><replace sel="doc/foo/text()[1]">replacement</replace></diff>
+        <result><doc><foo a="1">replacement</foo></doc></result>
+    </test>
+    
+    <test desc="Replace text with nothing">
+        <target><doc><foo a="1">sample</foo></doc></target>
+        <diff><replace sel="doc/foo/text()[1]"></replace></diff>
+        <result><doc><foo a="1"></foo></doc></result>
+    </test>
+
+
+    <test desc="Remove element">
+        <target><doc> <foo/> </doc></target>
+        <diff><remove sel="doc/foo"></remove></diff>
+        <result><doc>  </doc></result>
+    </test>
+    
+    <test desc="Remove comment">
+        <target><doc> <!-- foo --> </doc></target>
+        <diff><remove sel="doc/comment()[1]"></remove></diff>
+        <result><doc>  </doc></result>
+    </test>
+    
+    <test desc="Remove processing instruction">
+        <target><doc> <?foo?> </doc></target>
+        <diff><remove sel="doc/processing-instruction('foo')"></remove></diff>
+        <result><doc>  </doc></result>
+    </test>
+    
+    <test desc="Remove element and following whitespace">
+        <target><doc> <foo/>    </doc></target>
+        <diff><remove sel="doc/foo" ws="after"></remove></diff>
+        <result><doc> </doc></result>
+    </test>
+    
+    <test desc="Remove element and preceeding whitespace">
+        <target><doc>    <foo/> </doc></target>
+        <diff><remove sel="doc/foo" ws="before"></remove></diff>
+        <result><doc> </doc></result>
+    </test>
+    
+    <test desc="Remove element and surrounding whitespace">
+        <target><doc> <foo/> </doc></target>
+        <diff><remove sel="doc/foo" ws="both"></remove></diff>
+        <result><doc/></result>
+    </test>
+
+    <test desc="Remove element and following whitespace [error]">
+        <target><doc> <foo/></doc></target>
+        <diff><remove sel="doc/foo" ws="after"></remove></diff>
+        <result error="INVALID_WHITESPACE_DIRECTIVE"/>
+    </test>
+    
+    <test desc="Remove element and preceeding whitespace [error]">
+        <target><doc><foo/> </doc></target>
+        <diff><remove sel="doc/foo" ws="before"></remove></diff>
+        <result error="INVALID_WHITESPACE_DIRECTIVE"/>
+    </test>
+    
+    <test desc="Remove element and surrounding whitespace [error]">
+        <target><doc><foo/></doc></target>
+        <diff><remove sel="doc/foo" ws="both"></remove></diff>
+        <result error="INVALID_WHITESPACE_DIRECTIVE"/>
+    </test>
+    
+    <test desc="Remove root element">
+        <target><doc/></target>
+        <diff><remove sel="doc"></remove></diff>
+        <result error="INVALID_ROOT_ELEMENT_OPERATION"/>
+    </test>
+
+    <test desc="Remove attribute with whitespace directive">
+        <target><doc><foo a="1"/></doc></target>
+        <diff><remove sel="doc/foo/@a" ws="both"></remove></diff>
+        <result error="INVALID_PATCH_DIRECTIVE"/>
+    </test>
+    
+    <test desc="Remove text with whitespace directive">
+        <target><doc>hello</doc></target>
+        <diff><remove sel="doc/text()[1]" ws="both"></remove></diff>
+        <result error="INVALID_PATCH_DIRECTIVE"/>
+    </test>
+    
+    <test desc="Remove namespace with whitespace directive">
+        <target><doc><foo xmlns:pref="urn:test"/></doc></target>
+        <diff><remove sel="doc/foo/namespace::pref" ws="both"></remove></diff>
+        <result error="INVALID_PATCH_DIRECTIVE"/>
+    </test>
+
+    <test desc="Remove attribute">
+        <target><doc><foo a="1"/></doc></target>
+        <diff><remove sel="doc/foo/@a"></remove></diff>
+        <result><doc><foo/></doc></result>
+    </test>
+    
+    <test desc="Remove text">
+        <target><doc> hello </doc></target>
+        <diff><remove sel="doc/text()[1]"></remove></diff>
+        <result><doc/></result>
+    </test>
+    
+    <test desc="Remove namespace declaration">
+        <target><doc xmlns:pref="urn:test"/></target>
+        <diff><remove sel="doc/namespace::pref"></remove></diff>
+        <result><doc/></result>
+    </test>
+    
+    <test desc="Remove in-use namespace declaration">
+        <!-- spec says of the node to be removed,
+             "this prefix MUST NOT be associated with any node
+              prior to the removal of this namespace node." -->
+        <target><doc xmlns:pref="urn:test"><pref:foo/></doc></target>
+        <diff><remove sel="doc/namespace::pref"></remove></diff>
+        <result error="INVALID_PATCH_DIRECTIVE"/>
+    </test>
+
+</testCases>
