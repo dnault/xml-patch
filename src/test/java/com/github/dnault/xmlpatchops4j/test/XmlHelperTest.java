@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package net.sf.xmlpatchops4j.test;
+package com.github.dnault.xmlpatchops4j.test;
 
-import static net.sf.xmlpatchops4j.XmlHelper.*;
+import static com.github.dnault.xmlpatchops4j.XmlHelper.*;
 
 import java.util.HashMap;
 import java.util.Map;

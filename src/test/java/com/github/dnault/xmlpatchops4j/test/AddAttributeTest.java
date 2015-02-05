@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package net.sf.xmlpatchops4j.test;
+package com.github.dnault.xmlpatchops4j.test;
 
-import static net.sf.xmlpatchops4j.test.TestHelper.*;
+import static com.github.dnault.xmlpatchops4j.test.TestHelper.*;
 import junit.framework.TestCase;
 
-import net.sf.xmlpatchops4j.ErrorCondition;
-import net.sf.xmlpatchops4j.PatchException;
+import com.github.dnault.xmlpatchops4j.ErrorCondition;
 
 public class AddAttributeTest extends TestCase {
 

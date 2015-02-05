@@ -9,7 +9,7 @@ apply plugin: 'java'
 apply plugin: 'application'
 
 version = "0.1.0"
-group = "net.sf.xmlpatchops4j"
+group = "com.github.dnault"
 
 repositories {
     jcenter()
@@ -28,7 +28,7 @@ dependencies {
     testCompile "junit:junit:4.11"
 }
 
-mainClassName = "net.sf.xmlpatchops4j.CommandLineDriver"
+mainClassName = "com.github.dnault.xmlpatchops4j.CommandLineDriver"
 
 jar {
     manifest {
@@ -38,6 +38,6 @@ jar {
 
 shadowJar {
     ['org.apache.commons', 'org.jaxen', 'org.jdom', 'org.joptsimple'].each {
-        relocate it, "net.sf.xmlpatchops4j.repackaged.${it}"
+        relocate it, "com.github.dnault.xmlpatchops4j.repackaged.${it}"
     }
 }

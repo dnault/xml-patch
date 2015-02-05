@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.sf.xmlpatchops4j;
+package com.github.dnault.xmlpatchops4j;
 
 
 public class PatchException extends RuntimeException {
