@@ -72,7 +72,7 @@ public class CommandLineDriver {
     }
 
     private static void usage() {
-        System.err.println("USAGE: java -jar xmlpatchops4j.jar <input file> <patch file> <output file>");
+        System.err.println("USAGE: java -jar xml-patch.jar <input file> <patch file> <output file>");
         System.err.println("  A dash (-) may be used to indicate standard input / output");
         System.err.println("  The patch is an XML diff document as defined by RFC 5261");
         System.exit(1);
