@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.dnault.xmlpatchops4j;
+package com.github.dnault.xmlpatch;
 
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
@@ -32,7 +32,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.github.dnault.xmlpatchops4j.XmlHelper.getChildren;
+import static com.github.dnault.xmlpatch.XmlHelper.getChildren;
 import static java.util.Arrays.asList;
 
 public class BatchPatcher {

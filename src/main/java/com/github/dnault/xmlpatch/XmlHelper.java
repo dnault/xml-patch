@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.dnault.xmlpatchops4j;
+package com.github.dnault.xmlpatch;
 
 import java.io.IOException;
 import java.io.InputStream;

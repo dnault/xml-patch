@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.dnault.xmlpatchops4j;
+package com.github.dnault.xmlpatch;
 
 public enum ErrorCondition {
 	INVALID_ATTRIBUTE_VALUE, 

@@ -1,5 +1,9 @@
 plugins {
     id 'com.github.johnrengelman.shadow' version '1.2.0'
+    id "nebula.nebula-maven-publishing" version "2.2.1"
+    id "nebula.nebula-source-jar" version "2.2.1"
+    id "nebula.nebula-javadoc-jar" version "2.2.1"
+    id "com.jfrog.bintray" version "1.1"
 }
 
 apply plugin: 'idea'
@@ -28,7 +32,7 @@ dependencies {
     testCompile "junit:junit:4.11"
 }
 
-mainClassName = "com.github.dnault.xmlpatchops4j.CommandLineDriver"
+mainClassName = "com.github.dnault.xmlpatch.CommandLineDriver"
 
 jar {
     manifest {
@@ -38,6 +42,55 @@ jar {
 
 shadowJar {
     ['org.apache.commons', 'org.jaxen', 'org.jdom', 'org.joptsimple'].each {
-        relocate it, "com.github.dnault.xmlpatchops4j.repackaged.${it}"
+        relocate it, "com.github.dnault.xmlpatch.repackaged.${it}"
     }
 }
+
+bintray {
+
+    if (project.hasProperty('bintrayUsername')) {
+        user = project.bintrayUsername
+    }
+
+    if (project.hasProperty('bintrayApiKey')) {
+        key = project.bintrayApiKey
+    }
+
+    publications = ['mavenNebula'] // When uploading Maven-based publication files
+
+    dryRun = false  //false //Whether to run this as dry-run, without deploying
+    publish = false //true //If version should be auto published after an upload
+
+    pkg {
+        repo = 'maven'
+      //  userOrg = 'myorg' //An optional organization name when the repo belongs to one of the user's orgs
+        name = 'xml-patch'
+        desc = 'Java implementation of RFC 5261: An XML Patch Operations Framework Utilizing XPath Selectors'
+        websiteUrl = 'https://github.com/dnault/xml-patch'
+        issueTrackerUrl = 'https://github.com/dnault/xml-patch/issues'
+        vcsUrl = 'https://github.com/dnault/xml-patch.git'
+        licenses = ['Apache-2.0']
+        labels = ['xml', 'patch']
+        publicDownloadNumbers = false//true
+        //attributes= ['a': ['ay1', 'ay2'], 'b': ['bee'], c: 'cee'] //Optional package-level attributes
+        //Optional version descriptor
+        version {
+            name = project.version //'1.3-Final' //Bintray logical version name
+            //desc = 'optional, version-specific description'
+            released = new Date() //'optional, date of the version release' //2 possible values: date in the format of 'yyyy-MM-dd'T'HH:mm:ss.SSSZZ' OR a java.util.Date instance
+            vcsTag = project.version //'1.3.0'
+//            attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin'] //Optional version-level attributes
+            gpg {
+  //              sign = true //Determines whether to GPG sign the files. The default is false
+    //            passphrase = 'passphrase' //Optional. The passphrase for GPG signing'
+            }
+            mavenCentralSync {
+                sync = false //true //Optional (true by default). Determines whether to sync the version to Maven Central.
+                user = 'userToken' //OSS user token
+                password = 'paasword' //OSS user password
+                close = '0'//'1' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
+            }
+        }
+    }
+}
+

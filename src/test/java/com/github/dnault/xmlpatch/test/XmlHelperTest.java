@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.github.dnault.xmlpatchops4j.test;
+package com.github.dnault.xmlpatch.test;
 
-import static com.github.dnault.xmlpatchops4j.XmlHelper.*;
+import static com.github.dnault.xmlpatch.XmlHelper.*;
 
 import java.util.HashMap;
 import java.util.Map;

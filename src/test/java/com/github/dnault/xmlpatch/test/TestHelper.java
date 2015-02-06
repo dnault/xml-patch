@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package com.github.dnault.xmlpatchops4j.test;
+package com.github.dnault.xmlpatch.test;
 
 import static org.junit.Assert.*;
 
 import java.io.*;
 
-import com.github.dnault.xmlpatchops4j.ErrorCondition;
-import com.github.dnault.xmlpatchops4j.PatchException;
-import com.github.dnault.xmlpatchops4j.Patcher;
-import com.github.dnault.xmlpatchops4j.XmlHelper;
+import com.github.dnault.xmlpatch.ErrorCondition;
+import com.github.dnault.xmlpatch.PatchException;
+import com.github.dnault.xmlpatch.Patcher;
+import com.github.dnault.xmlpatch.XmlHelper;
 
 import org.jdom.*;
 import org.jdom.input.SAXBuilder;

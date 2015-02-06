@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.dnault.xmlpatchops4j;
+package com.github.dnault.xmlpatch;
 
 import org.jaxen.jdom.XPathNamespace;
 import org.jdom.*;
@@ -28,7 +28,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.*;
 
-import static com.github.dnault.xmlpatchops4j.XmlHelper.getInScopeNamespaceDeclarations;
+import static com.github.dnault.xmlpatch.XmlHelper.getInScopeNamespaceDeclarations;
 
 @SuppressWarnings("unchecked")
 public class Patcher {

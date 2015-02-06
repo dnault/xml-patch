@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.dnault.xmlpatchops4j.test;
+package com.github.dnault.xmlpatch.test;
 
 import java.io.InputStream;
 import java.util.HashSet;
@@ -22,8 +22,8 @@ import java.util.Set;
 
 import junit.framework.*;
 
-import com.github.dnault.xmlpatchops4j.ErrorCondition;
-import com.github.dnault.xmlpatchops4j.XmlHelper;
+import com.github.dnault.xmlpatch.ErrorCondition;
+import com.github.dnault.xmlpatch.XmlHelper;
 
 import org.jdom.*;
 import org.jdom.filter.Filter;
