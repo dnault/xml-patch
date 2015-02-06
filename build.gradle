@@ -94,4 +94,11 @@ bintray {
     }
 }
 
-tasks.bintrayUpload.dependsOn(release)
+
+tasks.release.finalizedBy bintrayUpload
+
+tasks.bintrayUpload.doFirst {
+    if (tasks.release.state.failure) {
+        throw new RuntimeException("skipping bintray upload because release failed")
+    }
+}
