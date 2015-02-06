@@ -41,7 +41,7 @@ jar {
 }
 
 shadowJar {
-    ['org.apache.commons', 'org.jaxen', 'org.jdom', 'org.joptsimple'].each {
+    ['org.apache.commons', 'org.jaxen', 'org.jdom', 'joptsimple'].each {
         relocate it, "com.github.dnault.xmlpatch.repackaged.${it}"
     }
 }
