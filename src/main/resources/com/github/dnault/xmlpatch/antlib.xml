@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<antlib>
+    <taskdef name="patchFile" classname="com.github.dnault.xmlpatch.ant.PatchXmlFile"/>
+    <taskdef name="patchDir" classname="com.github.dnault.xmlpatch.ant.PatchXmlDir"/>
+</antlib>
