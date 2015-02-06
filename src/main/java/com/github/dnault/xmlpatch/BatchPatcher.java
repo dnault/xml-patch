@@ -20,7 +20,6 @@ import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
-import org.apache.commons.io.FileUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.Format;
@@ -101,7 +100,7 @@ public class BatchPatcher {
                 IoHelper.move(tempFile, destFile);
             }
 
-            FileUtils.deleteDirectory(tempdir);
+            IoHelper.deleteDirectory(tempdir);
 
         } catch (PatchException e) {
             error(e.getMessage());

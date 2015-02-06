@@ -16,46 +16,23 @@
 
 package com.github.dnault.xmlpatch;
 
-import java.io.*;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 
 public class IoHelper {
     public static void move(File from, File to) throws IOException {
-        if (!from.renameTo(to)) {
-            copy(from, to);
-            if (!from.delete()) {
-                if (!to.delete()) {
-                    throw new IOException("failed to delete " + from + " and " + to);
-                }
-                throw new IOException("failed to delete " + from);
-            }
-        }
-    }
-
-    public static void copy(File from, File to) throws IOException {
-        final OutputStream os = new FileOutputStream(to);
-        final InputStream is = new FileInputStream(from);
-        final byte[] buffer = new byte[8000];
-
-        int count;
-        while ((count = is.read(buffer)) != -1) {
-            os.write(buffer, 0, count);
-        }
-
-        os.close();
-        is.close();
+        Files.move(from.toPath(), to.toPath(), REPLACE_EXISTING);
     }
 
     public static File createTempDir() throws IOException {
-        File baseDir = new File(System.getProperty("java.io.tmpdir"));
-        String baseName = "xmlpatch-" + System.currentTimeMillis() + "-";
-
-        for (int i = 0; i < 5000; i++) {
-            File tempDir = new File(baseDir, baseName + i);
-            if (tempDir.mkdir()) {
-                return tempDir;
-            }
-        }
-        throw new IOException("failed to create temp directory in " + baseDir.getAbsolutePath());
+        return Files.createTempDirectory("xmlpatch-").toFile();
     }
 
     public static void makeParentDirectory(File file) throws IOException {
@@ -67,5 +44,34 @@ public class IoHelper {
         } else if (!parent.isDirectory()) {
             throw new IOException("not a directory: " + parent.getAbsolutePath());
         }
+    }
+
+    public static void deleteDirectory(File dir) throws IOException {
+        Files.walkFileTree(dir.toPath(), new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                // try to delete the file anyway, even if its attributes could not be read,
+                // since delete-only access is theoretically possible
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                if (exc == null) {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                } else {
+                    // directory iteration failed; propagate exception
+                    throw exc;
+                }
+            }
+        });
     }
 }
