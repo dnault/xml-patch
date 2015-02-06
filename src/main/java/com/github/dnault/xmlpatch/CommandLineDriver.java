@@ -20,7 +20,7 @@ import java.io.*;
 
 public class CommandLineDriver {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String... args) throws Exception {
 
         if (args.length == 0) {
             usage();
@@ -56,7 +56,9 @@ public class CommandLineDriver {
             Patcher.patch(inputStream, patchStream, outputStream);
 
             if (patchInPlace) {
-                new File(output).renameTo(new File(input));
+                if (!new File(output).renameTo(new File(input))) {
+                    throw new IOException("could not rename temp file to " + input);
+                }
             }
         }
         catch (FileNotFoundException e) {
