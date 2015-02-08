@@ -1,4 +1,4 @@
-package com.github.dnault.xmlpatch;
+package com.github.dnault.xmlpatch.ant;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 
+import com.github.dnault.xmlpatch.CommandLineDriver;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.filters.BaseFilterReader;

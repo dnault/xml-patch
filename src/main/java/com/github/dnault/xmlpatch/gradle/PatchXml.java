@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.dnault.xmlpatch.XmlPatchFilter;
+import com.github.dnault.xmlpatch.ant.XmlPatchFilter;
 import org.gradle.api.tasks.Copy;
 import org.gradle.api.tasks.InputFile;
 
