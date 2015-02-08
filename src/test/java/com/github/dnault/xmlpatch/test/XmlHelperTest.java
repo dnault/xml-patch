@@ -16,7 +16,7 @@
 
 package com.github.dnault.xmlpatch.test;
 
-import static com.github.dnault.xmlpatch.XmlHelper.*;
+import static com.github.dnault.xmlpatch.internal.XmlHelper.*;
 
 import java.util.HashMap;
 import java.util.Map;

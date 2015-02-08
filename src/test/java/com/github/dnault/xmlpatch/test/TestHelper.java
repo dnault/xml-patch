@@ -23,7 +23,7 @@ import java.io.*;
 import com.github.dnault.xmlpatch.ErrorCondition;
 import com.github.dnault.xmlpatch.PatchException;
 import com.github.dnault.xmlpatch.Patcher;
-import com.github.dnault.xmlpatch.XmlHelper;
+import com.github.dnault.xmlpatch.internal.XmlHelper;
 
 import org.jdom.*;
 import org.jdom.input.SAXBuilder;

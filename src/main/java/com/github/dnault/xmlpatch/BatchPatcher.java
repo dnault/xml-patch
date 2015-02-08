@@ -16,6 +16,26 @@
 
 package com.github.dnault.xmlpatch;
 
+import static com.github.dnault.xmlpatch.internal.XmlHelper.getChildren;
+import static java.util.Arrays.asList;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.github.dnault.xmlpatch.batch.PatchAssembler;
+import com.github.dnault.xmlpatch.internal.IoHelper;
+import com.github.dnault.xmlpatch.internal.Log;
+import com.github.dnault.xmlpatch.internal.XmlHelper;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -24,15 +44,6 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-
-import java.io.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static com.github.dnault.xmlpatch.XmlHelper.getChildren;
-import static java.util.Arrays.asList;
 
 public class BatchPatcher {
 
@@ -92,7 +103,7 @@ public class BatchPatcher {
             Set<String> relativePathsOfPatchedFiles = patch(
                     assemblePatchDocument(patchFile), srcdir, destdir, tempdir);
 
-            info("writing patched files to destdir: " + destdir.getAbsolutePath());
+            Log.info("writing patched files to destdir: " + destdir.getAbsolutePath());
             for (String path : relativePathsOfPatchedFiles) {
                 File tempFile = new File(tempdir, path);
                 File destFile = new File(destdir, path);
@@ -103,21 +114,9 @@ public class BatchPatcher {
             IoHelper.deleteDirectory(tempdir);
 
         } catch (PatchException e) {
-            error(e.getMessage());
+            Log.error(e.getMessage());
             System.exit(1);
         }
-    }
-
-    private static void info(String s) {
-        System.out.println(s);
-    }
-
-    private static void warn(String s) {
-        System.err.println("WARN: " + s);
-    }
-
-    private static void error(String s) {
-        System.err.println("ERROR: " + s);
     }
 
     public static void assertFileExists(File f, String argname) throws FileNotFoundException {
@@ -139,58 +138,12 @@ public class BatchPatcher {
     }
 
     private static List<Element> assemblePatchDocument(File patchFile) throws Exception {
-        List<Element> diffs = new ArrayList<Element>();
-        assemblePatchDocument(patchFile, diffs, new HashSet<String>());
-        return diffs;
-    }
-
-    private static void assemblePatchDocument(File patchFile, List<Element> diffs, Set<String> includedFiles) throws Exception {
-
-        String path = patchFile.getAbsolutePath();
-        if (!includedFiles.add(path)) {
-            // already included this file.
-            return;
-        }
-
-        info("including patch file: " + path);
-
-        FileInputStream fis = new FileInputStream(patchFile);
-        Document doc = XmlHelper.parse(fis);
-        fis.close();
-
-        Element batchElement = doc.getRootElement();
-
-        if (!batchElement.getName().equals("diffs")) {
-            throw new IllegalArgumentException(path + ": expected root element of patch document to be 'diffs' but found '" + batchElement.getName() + "'");
-        }
-
-        for (Element diff : getChildren(batchElement)) {
-            if (diff.getName().equals("include")) {
-                String includeFilename = diff.getAttributeValue("file");
-                if (includeFilename == null) {
-                    throw new IllegalArgumentException(path + ": element 'include' missing 'file' attribute");
-                }
-
-                File includeFile = new File(patchFile.getParent(), includeFilename);
-                assemblePatchDocument(includeFile, diffs, includedFiles);
-                continue;
-            }
-
-            if (!diff.getName().equals("diff")) {
-                throw new IllegalArgumentException(path + ": unexpected element '" + diff.getName() + "' in patch document, expected 'diff'");
-            }
-
-            if (diff.getAttribute("file") == null) {
-                throw new IllegalArgumentException(path + ": diff element missing 'file' attribute");
-            }
-
-            diffs.add((Element) diff.clone());
-        }
+        return new PatchAssembler().assemble(patchFile).getDiffs();
     }
 
     private static Set<String> patch(List<Element> diffs, File srcdir, File destdir, File tempdir) throws Exception {
 
-        Set<String> outputFilePaths = new HashSet<String>();
+        Set<String> outputFilePaths = new HashSet<>();
 
         for (Element diff : diffs) {
 
@@ -210,7 +163,7 @@ public class BatchPatcher {
             File alreadyInTempDir = new File(tempdir, srcfilePath);
             fileToPatch = alreadyInTempDir.exists() ? alreadyInTempDir : new File(srcdir, srcfilePath);
 
-            info("patching " + srcfilePath + " [from " + fileToPatch.getAbsolutePath() + "]");
+            Log.info("patching " + srcfilePath + " [from " + fileToPatch.getAbsolutePath() + "]");
 
             diff.removeAttribute("file");
             Format format = Format.getRawFormat();

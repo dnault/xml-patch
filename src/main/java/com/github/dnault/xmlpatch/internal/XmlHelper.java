@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package com.github.dnault.xmlpatch;
+package com.github.dnault.xmlpatch.internal;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -32,7 +35,13 @@ import org.jdom.Parent;
 import org.jdom.input.SAXBuilder;
 
 public class XmlHelper {
-	
+
+    public static Document parse(File f) throws IOException, JDOMException {
+        try (FileInputStream fis = new FileInputStream(f)) {
+            return XmlHelper.parse(fis);
+        }
+    }
+
 	public static Document parse(InputStream is) throws IOException, JDOMException {
 		SAXBuilder builder = new SAXBuilder();
 

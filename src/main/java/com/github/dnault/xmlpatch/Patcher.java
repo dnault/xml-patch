@@ -16,6 +16,7 @@
 
 package com.github.dnault.xmlpatch;
 
+import com.github.dnault.xmlpatch.internal.XmlHelper;
 import org.jaxen.jdom.XPathNamespace;
 import org.jdom.*;
 import org.jdom.output.Format;
@@ -28,7 +29,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.*;
 
-import static com.github.dnault.xmlpatch.XmlHelper.getInScopeNamespaceDeclarations;
+import static com.github.dnault.xmlpatch.internal.XmlHelper.getInScopeNamespaceDeclarations;
 
 @SuppressWarnings("unchecked")
 public class Patcher {
@@ -66,21 +67,21 @@ public class Patcher {
         }
     }
 
-    private static void patch(Document target, Element patch)
-            throws JDOMException {
-
+    private static void patch(Document target, Element patch) throws JDOMException {
         String operation = patch.getName();
-        if (operation.equals("add")) {
-            add(target, patch);
-        } else if (operation.equals("replace")) {
-            replace(target, patch);
-        } else if (operation.equals("remove")) {
-            remove(target, patch);
-        } else {
-            // todo
-            throw new RuntimeException("unknown operation: " + operation);
+        switch (operation) {
+            case "add":
+                add(target, patch);
+                break;
+            case "replace":
+                replace(target, patch);
+                break;
+            case "remove":
+                remove(target, patch);
+                break;
+            default:
+                throw new RuntimeException("unknown operation: " + operation);
         }
-
     }
 
     private static void throwIfNotSingleNodeOfType(List<Content> content, Class expectedClass) {
@@ -433,7 +434,7 @@ public class Patcher {
     }
 
     private static void bindNamespacePrefixes(XPath xpath, Element patch) {
-        List<Element> chain = new ArrayList<Element>();
+        List<Element> chain = new ArrayList<>();
         for (Element e = patch; e != null; e = e.getParentElement()) {
             chain.add(e);
         }
@@ -470,7 +471,7 @@ public class Patcher {
             }
 
             int index = e.indexOf(c);
-            List<Content> nodesToDetach = new ArrayList<Content>();
+            List<Content> nodesToDetach = new ArrayList<>();
             nodesToDetach.add(c);
 
             if (before) {

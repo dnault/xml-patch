@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.dnault.xmlpatch;
+package com.github.dnault.xmlpatch.internal;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
