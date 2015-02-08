@@ -2,4 +2,7 @@
 <antlib>
     <taskdef name="patchFile" classname="com.github.dnault.xmlpatch.ant.PatchXmlFile"/>
     <taskdef name="patchDir" classname="com.github.dnault.xmlpatch.ant.PatchXmlDir"/>
+
+    <!-- filter -->
+    <typedef name="patch" classname="com.github.dnault.xmlpatch.XmlPatchFilter"/>
 </antlib>
