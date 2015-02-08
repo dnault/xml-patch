@@ -4,5 +4,5 @@
     <taskdef name="patchDir" classname="com.github.dnault.xmlpatch.ant.PatchXmlDir"/>
 
     <!-- filter -->
-    <typedef name="patch" classname="com.github.dnault.xmlpatch.ant.XmlPatchFilter"/>
+    <typedef name="patch" classname="com.github.dnault.xmlpatch.ant.AntXmlPatchFilter"/>
 </antlib>

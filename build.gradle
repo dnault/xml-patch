@@ -34,23 +34,13 @@ tasks.assemble.dependsOn(copyToLib)
 
 
 dependencies {
-    provided "org.apache.ant:ant:1.7.0"
-
-    //println gradleApi().resolve()
-
-
     provided gradleApi()
-    //provided localGroovy()
+    provided "org.apache.ant:ant:1.7.0"
 
     compile "org.jdom:jdom:1.1.3"
     compile "jaxen:jaxen:1.1.6"
     compile "commons-io:commons-io:2.4"
     compile "net.sf.jopt-simple:jopt-simple:4.8"
-
-    shadow "org.jdom:jdom:1.1.3"
-    shadow "jaxen:jaxen:1.1.6"
-    shadow "commons-io:commons-io:2.4"
-    shadow "net.sf.jopt-simple:jopt-simple:4.8"
 
     testCompile "junit:junit:4.11"
 }
@@ -85,15 +75,6 @@ shadowJar {
         include(dependency('commons-io:commons-io'))
         include(dependency('net.sf.jopt-simple:jopt-simple'))
     }
-
-
-                /*
-    dependencies {
-        include(dependency("org.jdom:jdom"))
-        include(dependency("jaxen:jaxen"))
-        include(dependency("commons-io:commons-io"))
-        include(dependency("net.sf.jopt-simple:jopt-simple"))
-      }           */
 }
 
 bintray {
