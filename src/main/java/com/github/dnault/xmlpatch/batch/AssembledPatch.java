@@ -3,14 +3,15 @@ package com.github.dnault.xmlpatch.batch;
 import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 
 import org.jdom.Element;
 
 public class AssembledPatch {
-    private LinkedHashSet<String> includedFiles;
+    private LinkedHashSet<String> includedFiles = new LinkedHashSet<>();
     private List<Element> diffs = new ArrayList<>();
 
     public LinkedHashSet<String> getIncludedFiles() {
@@ -35,6 +36,14 @@ public class AssembledPatch {
             }
         }
         return matchingDiffs;
+    }
+
+    public Set<String> getSourcePaths() {
+        Set<String> sourcePaths = new HashSet<>();
+        for (Element e : diffs) {
+            sourcePaths.add(e.getAttributeValue("file"));
+        }
+        return sourcePaths;
     }
 
     public void addDif(Element diff) {

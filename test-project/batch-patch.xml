@@ -1,0 +1,5 @@
+<diffs>
+    <diff file="foo.xml"><add sel="doc"><foo/></add></diff>
+    <diff file="nested/bar.xml"><add sel="doc"><bar/></add></diff>
+   <diff file="does-not-exist.xml"><add sel="doc"><bar/></add></diff>
+</diffs>

@@ -29,8 +29,6 @@ public class AntXmlPatchFilter extends XmlPatchFilter implements ChainableReader
     public Reader chain(Reader reader) {
         AntXmlPatchFilter r = new AntXmlPatchFilter(reader);
         r.setPatch(getPatch());
-        r.initialize();
-        r.setInitialized(true);
         return r;
     }
 
