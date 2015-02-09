@@ -36,7 +36,6 @@ public class XmlPatchFilter extends FilterReader {
             patch = new File(patch).getAbsolutePath();
         }
         this.patch = patch;
-
     }
 
     public String getPatch() {
@@ -71,13 +70,26 @@ public class XmlPatchFilter extends FilterReader {
         }
     }
 
-    public int read() throws IOException {
+    protected void initializeIfNecessary() {
         if (!isInitialized()) {
             initialize();
             setInitialized(true);
         }
+    }
 
+    public int read() throws IOException {
+        initializeIfNecessary();
         return super.read();
+    }
+
+    /**
+     * Reads characters into a portion of an array.
+     *
+     * @throws IOException If an I/O error occurs
+     */
+    public int read(char cbuf[], int off, int len) throws IOException {
+        initializeIfNecessary();
+        return super.read(cbuf, off, len);
     }
 
     @Override
