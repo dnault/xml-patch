@@ -18,6 +18,7 @@ class XmlPatchPlugin implements Plugin<Project> {
                     throw new FileNotFoundException(message)
                 }
                 project.logger.info message
+                return;
             }
 
             project.configure(copySpec) {
