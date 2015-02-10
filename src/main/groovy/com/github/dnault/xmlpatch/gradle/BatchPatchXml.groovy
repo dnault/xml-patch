@@ -26,7 +26,7 @@ public class BatchPatchXml extends Copy {
         AssembledPatch assembled = new PatchAssembler().assemble(patch);
         this.patch = assembled;
 
-        for (String patchFragment : assembled.getIncludedFiles()) {
+        for (String patchFragment : assembled.getPatchFiles()) {
             getInputs().file(patchFragment);
         }
     }

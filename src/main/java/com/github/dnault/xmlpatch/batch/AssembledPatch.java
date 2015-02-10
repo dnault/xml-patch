@@ -2,6 +2,7 @@ package com.github.dnault.xmlpatch.batch;
 
 import static java.util.Objects.requireNonNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -11,15 +12,25 @@ import java.util.Set;
 import org.jdom.Element;
 
 public class AssembledPatch {
-    private LinkedHashSet<String> includedFiles = new LinkedHashSet<>();
+    private LinkedHashSet<String> patchFiles = new LinkedHashSet<>();
     private List<Element> diffs = new ArrayList<>();
 
-    public LinkedHashSet<String> getIncludedFiles() {
-        return includedFiles;
+    public AssembledPatch() {
     }
 
-    public boolean addIncludedFile(String includedFile) {
-        return this.includedFiles.add(includedFile);
+    public AssembledPatch(File patch) throws Exception {
+        new PatchAssembler().assembleRecursive(patch, this);
+    }
+
+    /**
+     * @return the set of files that comprise the patch
+     */
+    public LinkedHashSet<String> getPatchFiles() {
+        return patchFiles;
+    }
+
+    public boolean addPatchFile(String includedFile) {
+        return this.patchFiles.add(includedFile);
     }
 
     public List<Element> getDiffs() {
