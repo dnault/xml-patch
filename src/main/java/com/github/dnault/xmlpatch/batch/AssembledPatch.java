@@ -12,7 +12,7 @@ import java.util.Set;
 import org.jdom.Element;
 
 public class AssembledPatch {
-    private LinkedHashSet<String> patchFiles = new LinkedHashSet<>();
+    private LinkedHashSet<File> patchFiles = new LinkedHashSet<>();
     private List<Element> diffs = new ArrayList<>();
 
     public AssembledPatch() {
@@ -25,11 +25,11 @@ public class AssembledPatch {
     /**
      * @return the set of files that comprise the patch
      */
-    public LinkedHashSet<String> getPatchFiles() {
+    public LinkedHashSet<File> getPatchFiles() {
         return patchFiles;
     }
 
-    public boolean addPatchFile(String includedFile) {
+    public boolean addPatchFile(File includedFile) {
         return this.patchFiles.add(includedFile);
     }
 

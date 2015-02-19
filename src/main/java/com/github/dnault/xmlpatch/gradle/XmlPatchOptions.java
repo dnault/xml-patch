@@ -19,4 +19,12 @@ public class XmlPatchOptions {
     public void setFailOnMissingSourcePath(boolean failOnMissingSourcePath) {
         this.failOnMissingSourcePath = failOnMissingSourcePath;
     }
+
+    @Override
+    public String toString() {
+        return "XmlPatchOptions{" +
+                "failOnMissingPatch=" + failOnMissingPatch +
+                ", failOnMissingSourcePath=" + failOnMissingSourcePath +
+                '}';
+    }
 }

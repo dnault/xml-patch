@@ -20,7 +20,7 @@ public class PatchAssembler {
     protected void assembleRecursive(File patchFile, AssembledPatch assembled) throws Exception {
 
         String path = patchFile.getAbsolutePath();
-        if (!assembled.addPatchFile(path)) {
+        if (!assembled.addPatchFile(patchFile)) {
             // already included this file.
             return;
         }

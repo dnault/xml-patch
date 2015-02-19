@@ -59,5 +59,13 @@ class XmlPatchPlugin implements Plugin<Project> {
             }
 
         })
+
+        project.getConvention().add("augmentWithXmlPatches", { CopySpec copySpec,
+                                                             Iterable<File> patchFiles,
+                                                             XmlPatchOptions options = new XmlPatchOptions() ->
+            for (File patchFile : patchFiles) {
+                project.augmentWithXmlPatch(copySpec, patchFile, options);
+            }
+        })
     }
 }
