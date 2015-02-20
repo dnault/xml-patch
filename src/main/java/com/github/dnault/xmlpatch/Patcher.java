@@ -298,7 +298,7 @@ public class Patcher {
                 p.getContent().addAll(nodeIndex + 1, newContent);
             } else {
                 throw new PatchException(ErrorCondition.INVALID_DIFF_FORMAT,
-                        "unrecognized position for add: " + position);
+                        "unrecognized position '" + position + "' for add; expected one of " + Arrays.toString(new String[] {"before", "after", "prepend"}));
             }
         } catch (IllegalAddException e) {
             // todo nice message
