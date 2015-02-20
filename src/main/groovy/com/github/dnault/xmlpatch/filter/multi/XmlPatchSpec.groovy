@@ -51,6 +51,12 @@ class XmlPatchSpec {
     }
 
     void assertFullyApplied() {
-        assert false: "Some source files referenced by ${patch.absolutePath} were not processed"
+        Set<String> missingPaths = assembled.sourcePaths.toSet()
+        missingPaths.removeAll(assembled.accessedPaths)
+        if (!missingPaths.isEmpty()) {
+            def message = "Some files targeted by XML patch ${patch.absolutePath} were not seen by the filter. " +
+                            "Missing target paths: ${missingPaths}"
+            throw new FileNotFoundException(message)
+        }
     }
 }

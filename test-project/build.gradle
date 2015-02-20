@@ -1,3 +1,7 @@
+import com.github.dnault.xmlpatch.filter.XmlPatch
+import com.github.dnault.xmlpatch.filter.multi.XmlMultiPatch
+import com.github.dnault.xmlpatch.filter.multi.XmlPatchSpec
+
 buildscript {
     repositories {
         // mavenLocal()
@@ -8,141 +12,64 @@ buildscript {
     }
 }
 
+//println project.buildscript.configurations.classpath.asPath
 
 
-import com.github.dnault.xmlpatch.XmlPatchFilter
-import com.github.dnault.xmlpatch.batch.AssembledPatch
-import com.github.dnault.xmlpatch.batch.BatchXmlPatchFilter
-import com.github.dnault.xmlpatch.gradle.PatchXml
-import org.gradle.api.internal.AbstractTask
-
-//import com.github.dnault.xmlpatch.gradle.BatchPatchXml
 apply plugin: 'java'
+apply plugin: 'war'
+//apply plugin: 'com.github.dnault.xmlpatch'
 
-//tasks.withType(BatchPatchXml) {
-//  failOnMissingSource = false
-//}
 
-task patchPlease(type: PatchXml) {
-    from "source/foo2.xml"
-    into "build/patched"
-    patch file("patch.xml")
-    eachFile {
-        println it.sourcePath
-        //     filter(XmlPatchFilter, patch: "patch.xml")
-    }
-}
-/*
-task batch(type: BatchPatchXml) {
-from "source"
-into "build/patched"
-patch file("batch-patch.xml")
+def webappPatch = new XmlPatchSpec("config/xml-patches/webapp-patch.xml", failOnMissingPatch: false)
+def resourcesPatch = new XmlPatchSpec("config/xml-patches/resources-patch.xml", failOnMissingPatch: false)
 
-failOnMissingSource = true
+war {
+    webInf {
+        from "src/main/etc/WEB-INF"
 
-//failOnMissingPatch = false
-// failOnMissingSource = false
-}
-  */
-
-def augmentWithXmlPatch(CopySpec copySpec, File patchFile) {
-
-    boolean failOnMissingSourcePath = false
-    boolean failOnMissingPatch = true
-
-    if (failOnMissingPatch && !patchFile.exists()) {
-        throw new RuntimeException("Patch file does not exist: ${patchFile.absolutePath}")
-    }
-
-    println failOnMissingSourcePath
-    println failOnMissingPatch
-
-    configure(copySpec) {
-        def assembledPatch = new AssembledPatch(patchFile);
-
-        eachFile {
-            filter([patch: assembledPatch, sourcePath: it.sourcePath], BatchXmlPatchFilter)
-        }
-
-        if (copySpec instanceof AbstractTask) {
-            def seenSourcePaths = [] as Set
-            def missingSourcePaths = [] as Set
-
-            eachFile {
-                seenSourcePaths += [it.sourcePath]
-            }
-
-            inputs.files assembledPatch.patchFiles
-
-            doLast {
-                missingSourcePaths = assembledPatch.sourcePaths - seenSourcePaths
-                if (!missingSourcePaths.isEmpty()) {
-                    String message = "XML patch ${patchFile} references missing source paths: " + missingSourcePaths
-
-                    if (failOnMissingSourcePath) {
-                        throw new RuntimeException(message);
-                    } else {
-                        logger.info(message)
-                    }
-                }
-            }
-
-            // store some properties in the task to help diagnose issues
-            //ext.xmlPatch = new XmlPatchExtraProperties()
-            //xmlPatch.assembledPatch = assembledPatch
-            //xmlPatch.seenSourcePaths = [] as Set
-            //xmlPatch.missingSourcePaths = [] as Set
+        filesMatching("**/*.xml") {
+            filter(XmlMultiPatch, spec: webappPatch, path: it.path)
         }
     }
+
+    filesMatching("**/*.xml") {
+        filter(XmlMultiPatch, spec: webappPatch, path: it.path)
+    }
 }
 
-
-def mySpec = copySpec {
-    from "foo"
-    into "bar"
+processResources {
+    filesMatching("**/*.xml") {
+        println it.path
+        filter(XmlMultiPatch, spec: resourcesPatch, path: it.path)
+    }
 }
 
-augmentWithXmlPatch processResources, file("resources-patch.xml")//failOnMissingSourcePath: false, failOnMissingPatch: false)
-//configureXmlPatch mySpec , file("resources-patch.xml")
-
-//println tasks.processResources.xmlPatch.assembledPatch.patchFiles
-
-/*
-tasks.processResources {
-inputs.files multiPatch.patchFiles
-eachFile {
-println it.sourcePath
-filter([patch: multiPatch, sourcePath: it.sourcePath], BatchXmlPatchFilter)
-
+task explodedWar(type: Sync) {
+    into "${buildDir}/webapp"
+    with war
 }
-//filter(XmlPatchFilter, patch: "patch.xml")
-}
-  */
 
-//println(multiPatch)
+[war, explodedWar].each {
+    it.inputs.dir "config/xml-patches"
+    it.doLast {
+        webappPatch.assertFullyApplied()
+    }
+}
+
+task foo << {
+    copy {
+        from "src/main/resources"
+        into "build"
+        filter(XmlPatch, patch: 'patch.xml')
+    }
+}
 
 task patch(type: Copy) {
     inputs.file "patch.xml"
-    //filter(XmlPatchFilter, patch: "patch.xml")
 
     from "source"
     into "build/patched"
     rename { "dest.xml" }
 
-    eachFile {
-        println it.sourcePath
-        filter(XmlPatchFilter, patch: "patch.xml")
-    }
+    filter(XmlPatch, patch: "patch.xml")
 }
-
-/*
-class PatchXml extends Copy {
-    @InputFile File patch;
-
-    @Override
-    protected void copy() {
-        filter(XmlPatchFilter, patch: patch.getAbsolutePath())
-
-        super.copy()
-    }
-} */

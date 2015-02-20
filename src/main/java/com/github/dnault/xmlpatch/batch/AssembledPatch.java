@@ -14,6 +14,7 @@ import org.jdom.Element;
 public class AssembledPatch {
     private LinkedHashSet<File> patchFiles = new LinkedHashSet<>();
     private List<Element> diffs = new ArrayList<>();
+    private Set<String> accessedPaths = new HashSet<>();
 
     public AssembledPatch() {
     }
@@ -44,6 +45,7 @@ public class AssembledPatch {
         for (Element e : diffs) {
             if (sourcePath.equals(e.getAttributeValue("file"))) {
                 matchingDiffs.add(e);
+                accessedPaths.add(sourcePath);
             }
         }
         return matchingDiffs;
@@ -55,6 +57,10 @@ public class AssembledPatch {
             sourcePaths.add(e.getAttributeValue("file"));
         }
         return sourcePaths;
+    }
+
+    public Set<String> getAccessedPaths() {
+        return accessedPaths;
     }
 
     public void addDif(Element diff) {
