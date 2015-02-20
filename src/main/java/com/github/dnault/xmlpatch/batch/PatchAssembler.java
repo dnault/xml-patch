@@ -25,7 +25,7 @@ public class PatchAssembler {
             return;
         }
 
-        Log.info("including patch file: " + path);
+        Log.info("Reading XML patch file: " + path);
 
         Document doc = XmlHelper.parse(patchFile);
         Element batchElement = doc.getRootElement();

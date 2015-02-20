@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 import com.github.dnault.xmlpatch.filter.XmlPatch;
+import com.github.dnault.xmlpatch.internal.Log;
 import com.github.dnault.xmlpatch.batch.AssembledPatch;
 import com.github.dnault.xmlpatch.internal.DeferredInitFilterReader;
 import org.apache.commons.io.FileUtils;
@@ -71,7 +72,7 @@ public class XmlMultiPatch extends DeferredInitFilterReader {
             outputter.output(diff, os);
         }
 
-        System.out.println("created temp file: " + temp.getAbsolutePath());
+        Log.debug("created temp file: " + temp.getAbsolutePath());
 
         return temp;
     }
