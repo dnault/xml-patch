@@ -1,4 +1,4 @@
-package com.github.dnault.xmlpatch.batch;
+package com.github.dnault.xmlpatch.gradle;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,11 +6,12 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 
+import com.github.dnault.xmlpatch.batch.*;
 import org.apache.commons.io.IOUtils;
 import org.jdom.Element;
 import org.junit.Test;
 
-public class PatchApplicatorTest {
+public class BatchXmlPatchFilterTest {
     @Test
     public void testBuildFilterChain() throws Exception {
         StringReader source = new StringReader("<doc/>");
@@ -25,14 +26,12 @@ public class PatchApplicatorTest {
         patch.addDif(new Element("diff").setAttribute("file", "other/bar.xml")
                 .addContent(new Element("add").setAttribute("sel", "doc/child").addContent(new Element("grandchild"))));
 
-
-        Reader patched = new PatchApplicator().buildFilterChain(source, "foo/bar.xml", patch);
+        Reader patched = new BatchXmlPatchFilter(source).buildFilterChain(source, "foo/bar.xml", patch);
 
         StringWriter result = new StringWriter();
 
         IOUtils.copy(patched, result);
 
         assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<doc><child><grandchild /></child></doc>\n", result.toString());
-
     }
 }

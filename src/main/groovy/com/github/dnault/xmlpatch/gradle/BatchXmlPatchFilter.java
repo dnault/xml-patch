@@ -1,4 +1,4 @@
-package com.github.dnault.xmlpatch.batch;
+package com.github.dnault.xmlpatch.gradle;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 import com.github.dnault.xmlpatch.XmlPatchFilter;
+import com.github.dnault.xmlpatch.batch.AssembledPatch;
 import com.github.dnault.xmlpatch.internal.DeferredInitFilterReader;
 import org.apache.commons.io.FileUtils;
 import org.jdom.Element;
@@ -13,46 +14,31 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 public class BatchXmlPatchFilter extends DeferredInitFilterReader {
-    private AssembledPatch patch;
-    private String sourcePath;
-
-    public AssembledPatch getPatch() {
-        return patch;
-    }
-
-    public void setPatch(AssembledPatch patch) {
-        this.patch = patch;
-    }
-
-    public String getSourcePath() {
-        return sourcePath;
-    }
-
-    public void setSourcePath(String sourcePath) {
-        this.sourcePath = sourcePath;
-    }
+    XmlPatchSpec spec;
+    String path;
 
     public BatchXmlPatchFilter(Reader in) {
         super(in);
     }
 
+    @Override
     protected void initialize() {
-        if (patch == null) {
-            throw new RuntimeException("missing 'patch' parameter, path to patch file");
+        if (spec == null) {
+            throw new RuntimeException("missing 'spec' parameter, value must be XmlPatchSpec instance");
         }
 
-        if (sourcePath == null) {
-            throw new RuntimeException("missing 'sourcePath' parameter, relative path to file being patched");
+        if (path == null) {
+            throw new RuntimeException("missing 'path' parameter, relative path to file being patched");
         }
 
         try {
-            in = buildFilterChain(in, sourcePath, patch);
+            in = buildFilterChain(in, path, spec.resolve());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public Reader buildFilterChain(Reader source, String sourcePath, AssembledPatch patch) throws IOException {
+    protected Reader buildFilterChain(Reader source, String sourcePath, AssembledPatch patch) throws IOException {
         for (Element diff : patch.getDiffs(sourcePath)) {
             diff = (Element) diff.clone();
             diff.removeAttribute("file");
