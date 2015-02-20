@@ -52,7 +52,7 @@ task explodedWar(type: Sync) {
 [war, explodedWar].each {
     it.inputs.dir "config/xml-patches"
     it.doLast {
-        webappPatch.assertFullyApplied()
+        webappPatch.done()
     }
 }
 
