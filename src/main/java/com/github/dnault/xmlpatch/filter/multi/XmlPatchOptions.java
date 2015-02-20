@@ -1,4 +1,4 @@
-package com.github.dnault.xmlpatch.gradle;
+package com.github.dnault.xmlpatch.filter.multi;
 
 public class XmlPatchOptions {
     private boolean failOnMissingPatch = true;

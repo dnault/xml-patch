@@ -1,4 +1,4 @@
-package com.github.dnault.xmlpatch;
+package com.github.dnault.xmlpatch.filter;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -10,15 +10,16 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 
+import com.github.dnault.xmlpatch.CommandLineDriver;
 import com.github.dnault.xmlpatch.internal.DeferredInitFilterReader;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
-public class XmlPatchFilter extends DeferredInitFilterReader {
+public class XmlPatch extends DeferredInitFilterReader {
     private String patch;
     private File output;
 
-    public XmlPatchFilter(Reader in) {
+    public XmlPatch(Reader in) {
         super(in);
     }
 

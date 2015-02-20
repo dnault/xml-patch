@@ -1,4 +1,4 @@
-package com.github.dnault.xmlpatch.gradle
+package com.github.dnault.xmlpatch.filter.multi
 
 import com.github.dnault.xmlpatch.batch.AssembledPatch
 import org.gradle.api.file.FileCollection

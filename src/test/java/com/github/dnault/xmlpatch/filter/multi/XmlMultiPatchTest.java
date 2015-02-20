@@ -1,4 +1,4 @@
-package com.github.dnault.xmlpatch.gradle;
+package com.github.dnault.xmlpatch.filter.multi;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,12 +6,12 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import com.github.dnault.xmlpatch.batch.*;
+import com.github.dnault.xmlpatch.batch.AssembledPatch;
 import org.apache.commons.io.IOUtils;
 import org.jdom.Element;
 import org.junit.Test;
 
-public class BatchXmlPatchFilterTest {
+public class XmlMultiPatchTest {
     @Test
     public void testBuildFilterChain() throws Exception {
         StringReader source = new StringReader("<doc/>");
@@ -26,7 +26,7 @@ public class BatchXmlPatchFilterTest {
         patch.addDif(new Element("diff").setAttribute("file", "other/bar.xml")
                 .addContent(new Element("add").setAttribute("sel", "doc/child").addContent(new Element("grandchild"))));
 
-        Reader patched = new BatchXmlPatchFilter(source).buildFilterChain(source, "foo/bar.xml", patch);
+        Reader patched = new XmlMultiPatch(source).buildFilterChain(source, "foo/bar.xml", patch);
 
         StringWriter result = new StringWriter();
 

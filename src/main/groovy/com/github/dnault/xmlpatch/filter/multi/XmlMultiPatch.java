@@ -1,11 +1,11 @@
-package com.github.dnault.xmlpatch.gradle;
+package com.github.dnault.xmlpatch.filter.multi;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Reader;
 
-import com.github.dnault.xmlpatch.XmlPatchFilter;
+import com.github.dnault.xmlpatch.filter.XmlPatch;
 import com.github.dnault.xmlpatch.batch.AssembledPatch;
 import com.github.dnault.xmlpatch.internal.DeferredInitFilterReader;
 import org.apache.commons.io.FileUtils;
@@ -13,11 +13,11 @@ import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-public class BatchXmlPatchFilter extends DeferredInitFilterReader {
+public class XmlMultiPatch extends DeferredInitFilterReader {
     XmlPatchSpec spec;
     String path;
 
-    public BatchXmlPatchFilter(Reader in) {
+    public XmlMultiPatch(Reader in) {
         super(in);
     }
 
@@ -45,7 +45,7 @@ public class BatchXmlPatchFilter extends DeferredInitFilterReader {
 
             final File tempDiff = saveToTempFile(diff);
 
-            source = new XmlPatchFilter(source) {
+            source = new XmlPatch(source) {
                 {
                     setPatch(tempDiff.getAbsolutePath());
                 }

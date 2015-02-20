@@ -3,13 +3,13 @@ package com.github.dnault.xmlpatch.ant;
 import java.io.Reader;
 import java.io.StringReader;
 
-import com.github.dnault.xmlpatch.XmlPatchFilter;
+import com.github.dnault.xmlpatch.filter.XmlPatch;
 import org.apache.tools.ant.filters.BaseFilterReader;
 import org.apache.tools.ant.filters.ChainableReader;
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
 
-public class AntXmlPatchFilter extends XmlPatchFilter implements ChainableReader, Parameterizable {
+public class AntXmlPatchFilter extends XmlPatch implements ChainableReader, Parameterizable {
     /**
      * Constructor for "dummy" instances.
      *
