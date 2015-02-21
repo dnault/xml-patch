@@ -24,22 +24,26 @@ ext {
 // and don't require multi-patch composition.
 //
 task singleTargetPatchExample(type: Copy) {
-    def patchFile = "${patchDir}/example-patch.xml"
-
-    inputs.file patchFile
+    inputs.dir patchDir
 
     from "src/main/example-documents"
     into "${buildDir}/patched"
 
     // Use one 'filesMatching' statement for each file you want to patch.
+
     filesMatching("**/patch-me.xml") {
-        // Single-target patches use the 'XmlPatch' filter
-        filter(XmlPatch, patch: patchFile)
+        // Single-target patches use the 'XmlPatch' filter.
+        filter(XmlPatch, patch: "${patchDir}/single/first-patch.xml")
+    }
+
+    filesMatching("**/patch-me-twice.xml") {
+        // Multiple filters may be applied in sequence.
+        filter(XmlPatch, patch: "${patchDir}/single/first-patch.xml")
+        filter(XmlPatch, patch: "${patchDir}/single/second-patch.xml")
     }
 }
 
-
-// Augment the standard 'processResources' task to apply an XML multi-patch
+// Augment the standard 'processResources' task to apply a multi-patch
 // to classpath resources. The same technique could be applied to the 'war' task
 // to patch webapp documents.
 //
@@ -47,12 +51,10 @@ task singleTargetPatchExample(type: Copy) {
 // to take advantage of multi-patch composition.
 //
 processResources {
-    // To apply a multi-patch, first create a patch specification.
-    def resourcesPatch = new XmlPatchSpec("${patchDir}/resources-multi-patch.xml")
-
-    // Specify the whole patch directory as an input in case the multi-patch includes
-    // other patch files.
     inputs.dir patchDir
+
+    // To apply a multi-patch, first create a patch specification.
+    def resourcesPatch = new XmlPatchSpec("${patchDir}/multi/resources-multi-patch.xml")
 
     filesMatching("**/*.xml") {
         // Multi-patches use the 'XMlMultiPatch' filter.

@@ -1,0 +1,7 @@
+<diffs>
+    <include file="included-multi-patch.xml"/>
+
+    <diff file="com/github/dnault/xmlpatch/example/patch-me.xml">
+        <add sel="doc/patched"><patchedAgain/></add>
+    </diff>
+</diffs>

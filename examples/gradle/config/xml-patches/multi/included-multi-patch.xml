@@ -1,0 +1,5 @@
+<diffs>
+    <diff file="com/github/dnault/xmlpatch/example/patch-me.xml">
+        <add sel="doc"><patched/></add>
+    </diff>
+</diffs>
