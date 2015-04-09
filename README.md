@@ -3,6 +3,31 @@ Java implementation of RFC 5261: An XML Patch Operations Framework Utilizing XPa
 
 With Gradle and Ant integration.
 
+## Getting the JAR
+
+The JAR is hosted by the JCenter Maven repository. Maven users must add JCenter as a remote repository.
+
+It's recommended to use a dependency manager like Gradle, Ivy, Maven, etc. to download the JAR and its transitive
+dependencies.
+
+    <dependency>
+        <groupId>com.github.dnault</groupId>
+        <artifactId>xml-patch</artifactId>
+        <version>0.1.0</version>
+    </dependency>
+
+If you're not using a dependency manager, you can download the JAR manually from this URL:
+
+    https://jcenter.bintray.com/com/github/dnault/xml-patch/
+
+These libraries must also be in the classpath:
+
+    jdom 1.1.3
+    jaxen 1.1.6
+    commons-io 2.4
+    jopt-simple 4.8
+
+
 ## Introduction
 
 So you're interested in patching some XML documents? Here's a quick illustration of why RFC 5261 XML patches
