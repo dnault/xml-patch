@@ -1,6 +1,6 @@
 # xml-patch
 
-[![Apache 2.0](https://img.shields.io/github/license/dnault/therapi.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+[![Apache 2.0](https://img.shields.io/github/license/dnault/xml-patch.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
 Java implementation of RFC 5261: An XML Patch Operations Framework Utilizing XPath Selectors
 
