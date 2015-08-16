@@ -21,15 +21,17 @@ import static com.github.dnault.xmlpatch.test.TestHelper.*;
 import junit.framework.TestCase;
 
 import com.github.dnault.xmlpatch.ErrorCondition;
+import org.junit.Test;
 
-public class AddContentTest extends TestCase {
+public class AddContentTest {
 
 	private static final String COMMON_TARGET = DECLARATION + 
 		"<doc>" + EOL + 
 		"  <note>This is a sample document</note>" + EOL +
 		"</doc>";  
-	
-	public void testAppendChildElement() throws Exception {		
+
+	@Test
+	public void appendChildElement() throws Exception {
 		String newElement = "<foo id='ert4773'>This is a new child</foo>";		
 		String diff = makeDiff("<add sel='doc'>" + newElement + "</add>");
 		
@@ -40,8 +42,9 @@ public class AddContentTest extends TestCase {
 	
 		doPatch(COMMON_TARGET, diff, expectedResult);
 	}
-	
-	public void testPreppendChildElement() throws Exception {		
+
+	@Test
+	public void preppendChildElement() throws Exception {
 		String newElement = "<foo id='ert4773'>This is a new child</foo>";		
 		String diff = makeDiff("<add sel='doc' pos='prepend'>" + newElement + "</add>");
 		
@@ -52,8 +55,9 @@ public class AddContentTest extends TestCase {
 	
 		doPatch(COMMON_TARGET, diff, expectedResult);
 	}
-	
-	public void testAddBeforeElement() throws Exception {		
+
+	@Test
+	public void addBeforeElement() throws Exception {
 		String newElement = "<foo id='ert4773'>This is a new child</foo>";		
 		String diff = makeDiff("<add sel='doc/note' pos='before'>" + newElement + "</add>");
 		
@@ -64,8 +68,9 @@ public class AddContentTest extends TestCase {
 	
 		doPatch(COMMON_TARGET, diff, expectedResult);
 	}
-	
-	public void testAddAfterElement() throws Exception {		
+
+	@Test
+	public void addAfterElement() throws Exception {
 		String newElement = "<foo id='ert4773'>This is a new child</foo>";		
 		String diff = makeDiff("<add sel='doc/note' pos='after'>" + newElement + "</add>");
 		
@@ -77,7 +82,8 @@ public class AddContentTest extends TestCase {
 		doPatch(COMMON_TARGET, diff, expectedResult);
 	}
 
-	public void testAddCommentBeforeElement() throws Exception {		
+	@Test
+	public void addCommentBeforeElement() throws Exception {
 		String newElement = "<!-- this is a comment -->";		
 		String diff = makeDiff("<add sel='doc/note' pos='before'>" + newElement + "</add>");
 		
@@ -88,8 +94,9 @@ public class AddContentTest extends TestCase {
 	
 		doPatch(COMMON_TARGET, diff, expectedResult);
 	}
-	
-	public void testAddCommentBeforeRoot() throws Exception {		
+
+	@Test
+	public void addCommentBeforeRoot() throws Exception {
 		String newElement = "<!-- this is a comment -->";		
 		String diff = makeDiff("<add sel='doc' pos='before'>" + newElement + "</add>");
 		
@@ -100,15 +107,17 @@ public class AddContentTest extends TestCase {
 	
 		doPatch(COMMON_TARGET, diff, expectedResult);
 	}
-	
-	public void testAddElementBeforeRoot() throws Exception {		
+
+	@Test
+	public void addElementBeforeRoot() throws Exception {
 		String newElement = "<foo/>";		
 		String diff = makeDiff("<add sel='doc' pos='before'>" + newElement + "</add>");
 	
 		doPatchExpectError(COMMON_TARGET, diff, ErrorCondition.INVALID_ROOT_ELEMENT_OPERATION);
 	}
-	
-	public void testAddNamespaceQualifiedElement() throws Exception {
+
+	@Test
+	public void addNamespaceQualifiedElement() throws Exception {
 		String newElement = "<x:foo xmlns:x='http://example.com'/>";		
 
 		String diff = makeDiff("<add sel='doc'>" + newElement + "</add>");
@@ -121,7 +130,8 @@ public class AddContentTest extends TestCase {
 	    doPatch(COMMON_TARGET, diff, expectedResult);
 	}
 
-	public void testAddNamespaceQualifiedElement2() throws Exception {
+	@Test
+	public void addNamespaceQualifiedElement2() throws Exception {
 		String newElement = "<x:foo/>";				
 		
 		String diff = TestHelper.makeDiffWithNamespace("<add sel='doc'>" + newElement + "</add>", 
@@ -134,8 +144,9 @@ public class AddContentTest extends TestCase {
 
 	    doPatch(COMMON_TARGET, diff, expectedResult);
 	}
-	
-	public void testAddNamespaceQualifiedElement3() throws Exception {
+
+	@Test
+	public void addNamespaceQualifiedElement3() throws Exception {
 		
 		String target = DECLARATION + 
 		"<doc xmlns:x='http://example.com'>" + EOL + 
@@ -155,7 +166,8 @@ public class AddContentTest extends TestCase {
 	    doPatch(target, diff, expectedResult);
 	}
 
-	public void testAddNamespaceQualifiedElement4() throws Exception {
+	@Test
+	public void addNamespaceQualifiedElement4() throws Exception {
 		
 		String target = DECLARATION + 
 		"<doc xmlns:x='http://DIFFERENT.URL.com'>" + EOL + 
@@ -175,7 +187,8 @@ public class AddContentTest extends TestCase {
 	    doPatch(target, diff, expectedResult);
 	}
 
-	public void testAddUnprefixedElementUnderDefaultPrefix() throws Exception {
+	@Test
+	public void addUnprefixedElementUnderDefaultPrefix() throws Exception {
 		String target = DECLARATION + 
 		"<doc xmlns='uri:default'>" + EOL + 
 		"  <note>This is a sample document</note>" + EOL +
@@ -195,9 +208,9 @@ public class AddContentTest extends TestCase {
 	    doPatch(target, diff, expectedResult);
 		
 	}
-	
-	
-	public void testAddSameNamespaceDifferentPrefix() throws Exception {
+
+	@Test
+	public void addSameNamespaceDifferentPrefix() throws Exception {
 		
 		String target = DECLARATION + 
 		"<doc xmlns:x='http://example.com'>" + EOL + 
@@ -216,9 +229,9 @@ public class AddContentTest extends TestCase {
 
 	    doPatch(target, diff, expectedResult);
 	}
-	
-	public void testAddSameNamespaceDefaultPrefix() throws Exception {
-		System.out.println("*************");
+
+	@Test
+	public void addSameNamespaceDefaultPrefix() throws Exception {
 		String target = DECLARATION + 
 		"<doc xmlns='http://example.com'>" + EOL + 
 		"  <note>This is a sample document</note>" + EOL +

@@ -16,47 +16,47 @@
 
 package com.github.dnault.xmlpatch.test;
 
-import static com.github.dnault.xmlpatch.internal.XmlHelper.*;
+import static com.github.dnault.xmlpatch.internal.XmlHelper.getInScopeNamespaceDeclarations;
+import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.jdom.Document;
 import org.jdom.Element;
+import org.junit.Test;
 
-public class XmlHelperTest extends TestCase {
-	
-	public void testGetInScopeNamespaceDeclarations() throws Exception {
-		String xml = "<a xmlns:one='uri:one' xmlns:two='uri:two'>" + 
-		"<b xmlns='uri:default'>" +
-		"<two:c xmlns:two='uri:anothertwo'>" +
-		"<d/></two:c></b></a>";
-		
-		Document doc = TestHelper.parse(xml);
-		Element a = doc.getRootElement();
-		Element b = getFirstChild(a);
-		Element c = getFirstChild(b);
-		Element d = getFirstChild(c);
-	
-		Map<String,String> prefixToURI = new HashMap<String,String>();
-		prefixToURI.put("","");
-		prefixToURI.put("one","uri:one");
-		prefixToURI.put("two","uri:two");
-		assertEquals(prefixToURI, getInScopeNamespaceDeclarations(a));
+public class XmlHelperTest {
 
-		prefixToURI.put("","uri:default");
-		assertEquals(prefixToURI, getInScopeNamespaceDeclarations(b));
-				
-		prefixToURI.put("two","uri:anothertwo");
-		assertEquals(prefixToURI, getInScopeNamespaceDeclarations(c));
-		assertEquals(prefixToURI, getInScopeNamespaceDeclarations(d));
-	}
+    @Test
+    public void testGetInScopeNamespaceDeclarations() throws Exception {
+        String xml = "<a xmlns:one='uri:one' xmlns:two='uri:two'>" +
+                "<b xmlns='uri:default'>" +
+                "<two:c xmlns:two='uri:anothertwo'>" +
+                "<d/></two:c></b></a>";
 
-	private Element getFirstChild(Element e) {
-		return (Element) e.getChildren().get(0);
-	}
-	
+        Document doc = TestHelper.parse(xml);
+        Element a = doc.getRootElement();
+        Element b = getFirstChild(a);
+        Element c = getFirstChild(b);
+        Element d = getFirstChild(c);
+
+        Map<String, String> prefixToURI = new HashMap<String, String>();
+        prefixToURI.put("", "");
+        prefixToURI.put("one", "uri:one");
+        prefixToURI.put("two", "uri:two");
+        assertEquals(prefixToURI, getInScopeNamespaceDeclarations(a));
+
+        prefixToURI.put("", "uri:default");
+        assertEquals(prefixToURI, getInScopeNamespaceDeclarations(b));
+
+        prefixToURI.put("two", "uri:anothertwo");
+        assertEquals(prefixToURI, getInScopeNamespaceDeclarations(c));
+        assertEquals(prefixToURI, getInScopeNamespaceDeclarations(d));
+    }
+
+    private Element getFirstChild(Element e) {
+        return (Element) e.getChildren().get(0);
+    }
 }
 
