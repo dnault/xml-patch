@@ -45,11 +45,6 @@ public class Patcher {
             Document diffDoc = XmlHelper.parse(diff);
 
             Element diffRoot = diffDoc.getRootElement();
-            if (!"diff".equals(diffRoot.getName())) {
-                throw new PatchException(ErrorCondition.INVALID_DIFF_FORMAT,
-                        "root element not named 'diff'");
-            }
-
             for (Object o : diffRoot.getChildren()) {
                 patch(targetDoc, (Element) o);
             }
@@ -200,7 +195,7 @@ public class Patcher {
 
         if (node instanceof XPathNamespace) {
             if (true) {
-                throw new RuntimeException("removing namespace declarations is not yet implemented");
+                throw new UnsupportedOperationException("removing namespace declarations is not yet implemented");
             }
             XPathNamespace jaxenNs = (XPathNamespace) node;
             Element parent = jaxenNs.getJDOMElement();
@@ -506,7 +501,7 @@ public class Patcher {
         }
 
         if (node instanceof XPathNamespace) {
-            throw new RuntimeException("removing namespace declarations is not yet implemented");
+            throw new UnsupportedOperationException("removing namespace declarations is not yet implemented");
             // return;
         }
     }
