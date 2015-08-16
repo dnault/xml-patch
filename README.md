@@ -6,7 +6,7 @@ Java implementation of RFC 5261: An XML Patch Operations Framework Utilizing XPa
 
 With Gradle and Ant integration.
 
-New in version 0.2.0: Compatiblity with RFC 7351 patch documents.
+New in version 0.2.0: Compatibility with RFC 7351 patch documents.
 
 
 ## Getting the JAR
