@@ -1,7 +1,13 @@
 # xml-patch
+
+[![Apache 2.0](https://img.shields.io/github/license/dnault/therapi.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+
 Java implementation of RFC 5261: An XML Patch Operations Framework Utilizing XPath Selectors
 
 With Gradle and Ant integration.
+
+New in version 0.2.0: Compatiblity with RFC 7351 patch documents.
+
 
 ## Getting the JAR
 
@@ -13,7 +19,7 @@ dependencies.
     <dependency>
         <groupId>com.github.dnault</groupId>
         <artifactId>xml-patch</artifactId>
-        <version>0.1.0</version>
+        <version>0.2.0</version>
     </dependency>
 
 If you're not using a dependency manager, you can download the JAR manually from this URL:
@@ -164,7 +170,7 @@ File 'build.gradle':
         }
 
         dependencies {
-            classpath "com.github.dnault:xml-patch:0.1.0"
+            classpath "com.github.dnault:xml-patch:0.2.0"
         }
     }
 
