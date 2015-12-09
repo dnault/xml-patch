@@ -16,7 +16,13 @@
 
 package com.github.dnault.xmlpatch;
 
-import java.io.*;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.File;
 
 public class CommandLineDriver {
 
@@ -75,6 +81,7 @@ public class CommandLineDriver {
         System.err.println("USAGE: java -jar xml-patch.jar <input file> <patch file> <output file>");
         System.err.println("  A dash (-) may be used to indicate standard input / output");
         System.err.println("  The patch is an XML diff document as defined by RFC 5261");
+        System.err.println("  or an XML patch document as defined by RFC 7351");
         System.exit(1);
     }
 }

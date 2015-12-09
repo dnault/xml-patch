@@ -19,14 +19,22 @@ package com.github.dnault.xmlpatch.test;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 
-import junit.framework.*;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import junit.framework.Test;
 
 import com.github.dnault.xmlpatch.ErrorCondition;
 import com.github.dnault.xmlpatch.internal.XmlHelper;
 
-import org.jdom.*;
-import org.jdom.filter.Filter;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.Comment;
+import org.jdom2.ProcessingInstruction;
+import org.jdom2.filter.Filter;
+import org.jdom2.filter.AbstractFilter;
 
 public class DataDrivenTest extends TestCase {
 
@@ -38,12 +46,17 @@ public class DataDrivenTest extends TestCase {
     private DataDrivenTest(Element e) {
         super(e.getAttributeValue("desc"));
 
-        Filter prologFilter = new Filter() {
-            public boolean matches(Object o) {
-                return o instanceof Element || o instanceof Comment
-                        || o instanceof ProcessingInstruction;
-            }
-        };
+        Filter prologFilter = new AbstractFilter() {
+                @Override
+                public Object filter(Object o) {
+                    if (o instanceof Element
+							|| o instanceof Comment
+                            || o instanceof ProcessingInstruction) {
+                        return o;
+                    }
+                    return null;
+                }
+            };
         target.addContent(XmlHelper.clone(e.getChild("target").getContent(prologFilter)));
         diff.setRootElement((Element) e.getChild("diff").clone());
         expectedResult.addContent(XmlHelper.clone(e.getChild("result").getContent(prologFilter)));

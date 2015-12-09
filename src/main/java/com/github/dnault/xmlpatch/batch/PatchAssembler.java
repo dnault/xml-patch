@@ -6,8 +6,8 @@ import java.io.File;
 
 import com.github.dnault.xmlpatch.internal.Log;
 import com.github.dnault.xmlpatch.internal.XmlHelper;
-import org.jdom.Document;
-import org.jdom.Element;
+import org.jdom2.Document;
+import org.jdom2.Element;
 
 public class PatchAssembler {
 

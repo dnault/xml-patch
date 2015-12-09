@@ -17,17 +17,33 @@
 package com.github.dnault.xmlpatch;
 
 import com.github.dnault.xmlpatch.internal.XmlHelper;
-import org.jaxen.jdom.XPathNamespace;
-import org.jdom.*;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
-import org.jdom.xpath.XPath;
+import org.jdom2.Attribute;
+import org.jdom2.Namespace;
+import org.jdom2.Text;
+import org.jdom2.Comment;
+import org.jdom2.ProcessingInstruction;
+import org.jdom2.Content;
+import org.jdom2.Element;
+import org.jdom2.Document;
+import org.jdom2.Parent;
+import org.jdom2.IllegalAddException;
+import org.jdom2.IllegalNameException;
+import org.jdom2.JDOMException;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
+import org.jdom2.xpath.XPath;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.*;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 
 import static com.github.dnault.xmlpatch.internal.XmlHelper.getInScopeNamespaceDeclarations;
 
@@ -193,13 +209,15 @@ public class Patcher {
         }
 
 
-        if (node instanceof XPathNamespace) {
+        if (node instanceof Namespace) {
             if (true) {
                 throw new UnsupportedOperationException("removing namespace declarations is not yet implemented");
             }
-            XPathNamespace jaxenNs = (XPathNamespace) node;
-            Element parent = jaxenNs.getJDOMElement();
-            Namespace ns = jaxenNs.getJDOMNamespace();
+            Element parent = new Element(""); // TODO: This needs to be the
+											  // element in the target that
+											  // contains the namespace
+											  // declaration
+            Namespace ns = (Namespace) node;
 
             String newUri = getTextMaybeTrim(patch);
             Namespace newNamespace = createNamespace(ns.getPrefix(), newUri);
@@ -216,7 +234,7 @@ public class Patcher {
         }
 
         throw new PatchException(ErrorCondition.INVALID_PATCH_DIRECTIVE,
-                "target node was not an Attribute, Element, Comment, Text, Processing Instruction, or Namespace");
+                "target node '" + node + "' was not an Attribute, Element, Comment, Text, Processing Instruction, or Namespace");
     }
 
     private static boolean isMultiline(String replacement) {
@@ -500,7 +518,7 @@ public class Patcher {
             return;
         }
 
-        if (node instanceof XPathNamespace) {
+        if (node instanceof Namespace) {
             throw new UnsupportedOperationException("removing namespace declarations is not yet implemented");
             // return;
         }
