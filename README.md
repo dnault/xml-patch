@@ -28,10 +28,10 @@ If you're not using a dependency manager, you can download the JAR manually from
 
 These libraries must also be in the classpath:
 
-    jdom 1.1.3
+    jdom 2.0.6
     jaxen 1.1.6
     commons-io 2.4
-    jopt-simple 4.8
+    jopt-simple 4.9
 
 
 ## Introduction
