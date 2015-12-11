@@ -8,7 +8,7 @@ import java.io.StringWriter;
 
 import com.github.dnault.xmlpatch.batch.AssembledPatch;
 import org.apache.commons.io.IOUtils;
-import org.jdom.Element;
+import org.jdom2.Element;
 import org.junit.Test;
 
 public class XmlMultiPatchTest {

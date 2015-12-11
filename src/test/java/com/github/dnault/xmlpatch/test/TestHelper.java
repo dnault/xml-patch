@@ -16,18 +16,28 @@
 
 package com.github.dnault.xmlpatch.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 
-import java.io.*;
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import com.github.dnault.xmlpatch.ErrorCondition;
 import com.github.dnault.xmlpatch.PatchException;
 import com.github.dnault.xmlpatch.Patcher;
 import com.github.dnault.xmlpatch.internal.XmlHelper;
 
-import org.jdom.*;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.XMLOutputter;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.XMLOutputter;
+
 import org.junit.Assert;
 
 public class TestHelper {
