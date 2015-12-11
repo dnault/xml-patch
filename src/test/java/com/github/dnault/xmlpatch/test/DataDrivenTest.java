@@ -19,8 +19,6 @@ package com.github.dnault.xmlpatch.test;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.List;
-import java.util.ArrayList;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -42,21 +40,22 @@ public class DataDrivenTest extends TestCase {
     private final Document diff = new Document();
     private final Document expectedResult = new Document();
     private final ErrorCondition expectedError;
-    
+
     private DataDrivenTest(Element e) {
         super(e.getAttributeValue("desc"));
 
         Filter prologFilter = new AbstractFilter() {
-                @Override
-                public Object filter(Object o) {
-                    if (o instanceof Element
-							|| o instanceof Comment
-                            || o instanceof ProcessingInstruction) {
-                        return o;
-                    }
-                    return null;
+            @Override
+            public Object filter(Object o) {
+                if (o instanceof Element
+                        || o instanceof Comment
+                        || o instanceof ProcessingInstruction) {
+                    return o;
                 }
-            };
+                return null;
+            }
+        };
+
         target.addContent(XmlHelper.clone(e.getChild("target").getContent(prologFilter)));
         diff.setRootElement((Element) e.getChild("diff").clone());
         expectedResult.addContent(XmlHelper.clone(e.getChild("result").getContent(prologFilter)));
@@ -67,10 +66,9 @@ public class DataDrivenTest extends TestCase {
 
     public static Test suite() {
         String resourceName = "regression-test.xml";
-        
+
         TestSuite suite = new TestSuite(resourceName);
-        
-        
+
         InputStream is = DataDrivenTest.class.getResourceAsStream(resourceName);
         try {
             Document d = XmlHelper.parse(is);
@@ -78,19 +76,18 @@ public class DataDrivenTest extends TestCase {
 
             for (Object o : d.getRootElement().getChildren()) {
                 Element e = (Element) o;
-                
+
                 String name = e.getAttributeValue("desc");
                 if (!testNames.add(name)) {
                     throw new RuntimeException("duplicate test name '" + name + "'");
                 }
-                
+
                 suite.addTest(new DataDrivenTest(e));
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        
+
         return suite;
     }
 

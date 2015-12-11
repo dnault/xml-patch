@@ -117,7 +117,7 @@ public class Patcher {
         d.addContent(e);
 
         doReplace(patch, e.getContent(0));
-        System.out.println("[" + e.getText() +"]");
+        System.out.println("[" + e.getText() + "]");
     }
 
     private static String getTextMaybeTrim(Element patch) {
@@ -155,7 +155,7 @@ public class Patcher {
 
             if (lenient) {
                 // ignore whitespace siblings so the diff document can be pretty
-                for (Iterator<Content> i = replacement.iterator(); i.hasNext();) {
+                for (Iterator<Content> i = replacement.iterator(); i.hasNext(); ) {
                     if (isWhitespace(i.next())) {
                         i.remove();
                     }
@@ -213,10 +213,12 @@ public class Patcher {
             if (true) {
                 throw new UnsupportedOperationException("removing namespace declarations is not yet implemented");
             }
-            Element parent = new Element(""); // TODO: This needs to be the
-											  // element in the target that
-											  // contains the namespace
-											  // declaration
+
+
+            // TODO: This needs to be the element in the target that
+            //       contains the namespace declaration
+            Element parent = new Element("");
+
             Namespace ns = (Namespace) node;
 
             String newUri = getTextMaybeTrim(patch);
@@ -311,7 +313,7 @@ public class Patcher {
                 p.getContent().addAll(nodeIndex + 1, newContent);
             } else {
                 throw new PatchException(ErrorCondition.INVALID_DIFF_FORMAT,
-                        "unrecognized position '" + position + "' for add; expected one of " + Arrays.toString(new String[] {"before", "after", "prepend"}));
+                        "unrecognized position '" + position + "' for add; expected one of " + Arrays.toString(new String[]{"before", "after", "prepend"}));
             }
         } catch (IllegalAddException e) {
             // todo nice message
