@@ -3,7 +3,7 @@
 Thank you to the kind folks who have contributed pull requests, bug reports, and ideas for enhancements.
 
 
-Relase 0.2.1:
+Relase 0.3.0:
     * Issue #6 Create standalone runnable JAR -- Suggested by Maurizio Pillitu (maoo)
     * Issue #5 Switch to jdom2 -- Contributed by Norbert Kiesel (nkiesel)
     * Issue #4 Upgraded gradle, gradle plugins, and jars -- Contributed by Norbert Kiesel (nkiesel)
