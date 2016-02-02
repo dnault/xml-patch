@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "com.github.dnault"
-version = "0.3.0"
+version = "0.3.1-SNAPSHOT"
 
 repositories {
     jcenter()
@@ -76,12 +76,13 @@ shadowJar {
     configurations = [project.configurations.isolated]
 }
 
-// Publish the standalone JAR as an associated artifact
 publishing {
     publications {
         shadow(MavenPublication) {
             from components.java
             artifact shadowJar
+            artifact sourceJar
+            artifact javadocJar
         }
     }
 }
@@ -96,7 +97,7 @@ bintray {
         key = project.bintrayApiKey
     }
 
-    publications = ['mavenNebula'] // When uploading Maven-based publication files
+    publications = ['shadow'] // When uploading Maven-based publication files
 
     dryRun = false  //false //Whether to run this as dry-run, without deploying
     publish = false //true //If version should be auto published after an upload
