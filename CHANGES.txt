@@ -1,0 +1,15 @@
+
+
+Thank you to the kind folks who have contributed pull requests, bug reports, and ideas for enhancements.
+
+
+Relase 0.2.1:
+    * Issue #6 Create standalone runnable JAR -- Suggested by Maurizio Pillitu (maoo)
+    * Issue #5 Switch to jdom2 -- Contributed by Norbert Kiesel (nkiesel)
+    * Issue #4 Upgraded gradle, gradle plugins, and jars -- Contributed by Norbert Kiesel (nkiesel)
+
+Relase 0.2.0:
+    * Issue #2 Allow "patch" root element in accordance with RFC 7351 -- Suggested by Jonathan Buhacoff (jbuhacoff)
+
+Release 0.1.0:
+    * Initial release

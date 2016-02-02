@@ -9,7 +9,6 @@ plugins {
     id "nebula.maven-publish" version "4.4.4"
     id "nebula.source-jar" version "4.4.4"
     id "nebula.javadoc-jar" version "4.4.4"
-   // id 'nebula.nebula-release' version '2.2.4'
     id "com.jfrog.bintray" version "1.5"
     id 'com.github.ben-manes.versions' version '0.11.3'
 }
@@ -21,36 +20,13 @@ repositories {
     jcenter()
 }
 
-tasks.withType(Tar){
+tasks.withType(Tar) {
     compression = Compression.GZIP
 }
 
 
-task copyToLib(type: Copy) {
-    into "$buildDir/libs"
-    from configurations.runtime - configurations.provided
-}
-
-tasks.assemble.dependsOn(copyToLib)
-
-
-
-dependencies {
-    provided gradleApi()
-    provided localGroovy()
-    provided "org.apache.ant:ant:1.9.6"
-
-    compile "org.jdom:jdom2:2.0.6"
-    runtime "jaxen:jaxen:1.1.6"
-    compile "commons-io:commons-io:2.4"
-    compile "net.sf.jopt-simple:jopt-simple:4.9"
-
-    testCompile "junit:junit:4.12"
-}
-
 targetCompatibility = "1.7"
 sourceCompatibility = "1.7"
-
 
 mainClassName = "com.github.dnault.xmlpatch.CommandLineDriver"
 
@@ -60,23 +36,53 @@ jar {
     }
 }
 
+// Use this workaround for excluding 'provided' dependencies from shadowJar:
+//     https://github.com/johnrengelman/shadow/issues/166#issuecomment-160355617
+
+configurations {
+    isolated
+}
+
+def compileDependencies = ["org.jdom:jdom2:2.0.6",
+                           "jaxen:jaxen:1.1.6",
+                           "commons-io:commons-io:2.4",
+                           "net.sf.jopt-simple:jopt-simple:4.9"]
+
+dependencies {
+    provided gradleApi()
+    provided localGroovy()
+    provided "org.apache.ant:ant:1.9.6"
+
+    testCompile "junit:junit:4.12"
+
+    compileDependencies.each {
+        compile it
+        isolated it
+    }
+}
+
 shadowJar {
     ['org.apache.commons', 'org.jaxen', 'org.jdom2', 'joptsimple'].each {
         relocate it, "com.github.dnault.xmlpatch.repackaged.${it}"
     }
 
-    // See http://jira.codehaus.org/browse/JAXEN-209
+    // JAXEN-209 Jaxen includes a duplicate, obsolete version of this class not required by modern JDKs
     exclude 'org/w3c/dom/UserDataHandler.class'
 
-    exclude 'org/apache/tools/**'
-    exclude 'images/**' // ant images
-    exclude 'META-INF/**'
+    exclude 'META-INF/maven/**'
+    exclude 'META-INF/*.txt'
+    exclude 'META-INF/*.xml'
 
-    dependencies {
-        include(dependency('org.jdom:jdom2'))
-        include(dependency('jaxen:jaxen'))
-        include(dependency('commons-io:commons-io'))
-        include(dependency('net.sf.jopt-simple:jopt-simple'))
+    configurations = [project.configurations.isolated]
+}
+
+// Publish the standalone JAR as an associated artifact
+publishing {
+    publications {
+        shadow(MavenPublication) {
+            from components.java
+            artifact shadowJar
+        }
     }
 }
 
@@ -97,7 +103,7 @@ bintray {
 
     pkg {
         repo = 'maven'
-      //  userOrg = 'myorg' //An optional organization name when the repo belongs to one of the user's orgs
+        //  userOrg = 'myorg' //An optional organization name when the repo belongs to one of the user's orgs
         name = 'xml-patch'
         desc = 'Java implementation of RFC 5261: An XML Patch Operations Framework Utilizing XPath Selectors'
         websiteUrl = 'https://github.com/dnault/xml-patch'
