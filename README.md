@@ -15,7 +15,7 @@ New in version 0.2.0: Compatibility with RFC 7351 patch documents.
 The JAR is hosted by the JCenter Maven repository. Maven users must add JCenter as a remote repository.
 
 It's recommended to use a dependency manager like Gradle, Ivy, Maven, etc. to download the JAR and its transitive
-dependencies.
+dependencies (or optionally a standalone JAR).
 
     <dependency>
         <groupId>com.github.dnault</groupId>
