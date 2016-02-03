@@ -5,9 +5,9 @@
 
 Java implementation of RFC 5261: An XML Patch Operations Framework Utilizing XPath Selectors
 
-With Gradle and Ant integration.
+Also compatible with RFC 7351 patch documents.
 
-New in version 0.2.0: Compatibility with RFC 7351 patch documents.
+Featuring Gradle and Ant integration.
 
 
 ## Getting the JAR
