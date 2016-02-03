@@ -20,19 +20,17 @@ dependencies.
     <dependency>
         <groupId>com.github.dnault</groupId>
         <artifactId>xml-patch</artifactId>
-        <version>0.2.0</version>
+        <version>0.3.0</version>
+
+        <!-- Optionally use this classifier to get a standalone JAR
+             that includes repackaged versions of its dependencies -->
+        <classifier>all</classifier>
     </dependency>
 
-If you're not using a dependency manager, you can download the JAR manually from this URL:
 
-    https://jcenter.bintray.com/com/github/dnault/xml-patch/
+If you're not using a dependency manager, you can download the standalone JAR manually from this URL:
 
-These libraries must also be in the classpath:
-
-    jdom 2.0.6
-    jaxen 1.1.6
-    commons-io 2.4
-    jopt-simple 4.9
+    https://jcenter.bintray.com/com/github/dnault/xml-patch/0.3.0/xml-patch-0.3.0-all.jar
 
 
 ## Introduction
@@ -241,8 +239,11 @@ File 'build.gradle':
 
 ### Command Line
 
+The most convenient way to apply a patch from the command line is to use the standalone JAR
+(see "Getting the JAR" for a download link).
+
 Apply an RFC 5261 patch:
 
-    java -jar xml-patch-<version>.jar <input file> <patch file> <output file>
+    java -jar xml-patch-<version>-all.jar <input file> <patch file> <output file>
 
 A dash (-) may be used to indicate standard input / output.
