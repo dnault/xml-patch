@@ -76,9 +76,42 @@ shadowJar {
     configurations = [project.configurations.isolated]
 }
 
+def gitUrl = 'git@github.com:dnault/xml-patch.git';
+
+def pomConfig = {
+    name "${group}:${project.name}"
+    description "Java implementation of RFC 5261: An XML Patch Operations Framework Utilizing XPath Selectors"
+    url 'https://github.com/dnault/xml-patch'
+    scm {
+        url "${gitUrl}"
+        connection "scm:git:${gitUrl}"
+        developerConnection "scm:git:${gitUrl}"
+    }
+    licenses {
+        license {
+            name 'Apache License 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+        }
+    }
+    developers {
+        developer {
+            name 'David Nault'
+            email 'dnault@mac.com'
+            organization 'dnault'
+            organizationUrl 'https://github.com/dnault'
+        }
+    }
+}
+
 publishing {
     publications {
         shadow(MavenPublication) {
+            pom.withXml {
+                asNode().appendNode('description',
+                        'Java implementation of RFC 5261: An XML Patch Operations Framework Utilizing XPath Selectors')
+                asNode().children().last() + pomConfig
+            }
+
             from components.java
             artifact shadowJar
             artifact sourceJar
