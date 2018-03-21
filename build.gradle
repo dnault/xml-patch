@@ -1,16 +1,10 @@
 plugins {
     id "java"
     id "groovy"
+    id "maven-publish"
     id "application"
-    id "idea"
-    id "eclipse"
-    id 'com.github.johnrengelman.shadow' version '1.2.2'
-    id "nebula.provided-base" version "3.0.3"
-    id "nebula.maven-publish" version "4.4.4"
-    id "nebula.source-jar" version "4.4.4"
-    id "nebula.javadoc-jar" version "4.4.4"
+    id 'com.github.johnrengelman.plugin-shadow' version '2.0.2'
     id "com.jfrog.bintray" version "1.5"
-    id 'com.github.ben-manes.versions' version '0.11.3'
 }
 
 group = "com.github.dnault"
@@ -24,7 +18,6 @@ tasks.withType(Tar) {
     compression = Compression.GZIP
 }
 
-
 targetCompatibility = "1.7"
 sourceCompatibility = "1.7"
 
@@ -36,32 +29,22 @@ jar {
     }
 }
 
-// Use this workaround for excluding 'provided' dependencies from shadowJar:
-//     https://github.com/johnrengelman/shadow/issues/166#issuecomment-160355617
-
-configurations {
-    isolated
-}
-
-def compileDependencies = ["org.jdom:jdom2:2.0.6",
-                           "jaxen:jaxen:1.1.6",
-                           "commons-io:commons-io:2.4",
-                           "net.sf.jopt-simple:jopt-simple:4.9"]
-
 dependencies {
-    provided gradleApi()
-    provided localGroovy()
-    provided "org.apache.ant:ant:1.9.6"
+    shadow gradleApi()
+    shadow localGroovy()
+    compileOnly "org.apache.ant:ant:1.9.6"
+
+    compile "org.jdom:jdom2:2.0.6"
+    compile "jaxen:jaxen:1.1.6"
+    compile "commons-io:commons-io:2.4"
+    compile "net.sf.jopt-simple:jopt-simple:4.9"
 
     testCompile "junit:junit:4.12"
-
-    compileDependencies.each {
-        compile it
-        isolated it
-    }
 }
 
 shadowJar {
+    classifier = null
+
     ['org.apache.commons', 'org.jaxen', 'org.jdom2', 'joptsimple'].each {
         relocate it, "com.github.dnault.xmlpatch.repackaged.${it}"
     }
@@ -72,15 +55,21 @@ shadowJar {
     exclude 'META-INF/maven/**'
     exclude 'META-INF/*.txt'
     exclude 'META-INF/*.xml'
+}
 
-    configurations = [project.configurations.isolated]
+task sourceJar(type: Jar, dependsOn: classes) {
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from javadoc.destinationDir
 }
 
 def gitUrl = 'git@github.com:dnault/xml-patch.git';
-
+ext.description = "Java implementation of RFC 5261: An XML Patch Operations Framework Utilizing XPath Selectors"
 def pomConfig = {
     name "${group}:${project.name}"
-    description "Java implementation of RFC 5261: An XML Patch Operations Framework Utilizing XPath Selectors"
+    description project.ext.description
     url 'https://github.com/dnault/xml-patch'
     scm {
         url "${gitUrl}"
@@ -103,20 +92,34 @@ def pomConfig = {
     }
 }
 
+task install {
+    dependsOn(publishToMavenLocal)
+}
+
 publishing {
     publications {
-        shadow(MavenPublication) {
+        mavenJava(MavenPublication) { publication ->
+            project.shadow.component(publication)
+
             pom.withXml {
-                asNode().appendNode('description',
-                        'Java implementation of RFC 5261: An XML Patch Operations Framework Utilizing XPath Selectors')
+                asNode().appendNode('description', project.ext.description)
                 asNode().children().last() + pomConfig
             }
 
-            from components.java
-            artifact shadowJar
-            artifact sourceJar
-            artifact javadocJar
+            artifact sourceJar {
+                classifier 'sources'
+            }
+
+            artifact javadocJar {
+                classifier 'javadoc'
+            }
         }
+    }
+}
+
+bintrayUpload.doFirst {
+    if (version.contains("SNAPSHOT")) {
+        throw new RuntimeException("Must not upload snapshots to bintray (current version is ${version}) -- create and tag a release version first!")
     }
 }
 
@@ -130,7 +133,7 @@ bintray {
         key = project.bintrayApiKey
     }
 
-    publications = ['shadow'] // When uploading Maven-based publication files
+    publications = ['mavenJava'] // When uploading Maven-based publication files
 
     dryRun = false  //false //Whether to run this as dry-run, without deploying
     publish = false //true //If version should be auto published after an upload
@@ -167,12 +170,3 @@ bintray {
         }
     }
 }
-
-/*
-tasks.release.finalizedBy bintrayUpload
-
-tasks.bintrayUpload.doFirst {
-    if (tasks.release.state.failure) {
-        throw new RuntimeException("skipping bintray upload because release failed")
-    }
-} */

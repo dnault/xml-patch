@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.github.dnault:xml-patch:0.1.0"
+        classpath "com.github.dnault:xml-patch:0.3.1"
     }
 }
 
