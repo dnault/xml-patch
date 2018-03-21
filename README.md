@@ -19,7 +19,7 @@ Featuring Gradle and Ant integration.
 </dependency>
 ```
 
-You can also [download the JAR](https://jcenter.bintray.com/com/github/dnault/xml-patch/0.3.0/xml-patch-0.3.0-all.jar)
+You can also [download the JAR](https://jcenter.bintray.com/com/github/dnault/xml-patch/0.3.1/xml-patch-0.3.1.jar)
 if you want to run the patcher from the command line.
 
 
