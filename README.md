@@ -1,5 +1,6 @@
 # xml-patch
 
+[![Build Status](https://travis-ci.org/dnault/xml-patch.svg?branch=master)](https://travis-ci.org/dnault/xml-patch)
 [![Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 ![Java 1.7+](https://img.shields.io/badge/java-1.7+-lightgray.svg)
 
