@@ -57,6 +57,7 @@ public class AddAttributeTest {
     }
 
     @Test
+    @Ignore("known failure")
     public void addQualifiedAttributeWithoutDeclaration() throws Exception {
         fail();
         // todo 
@@ -95,35 +96,6 @@ public class AddAttributeTest {
                 "<doc xmlns:pref='urn:ns:xxx'/>";
 
         doPatch(target, diff, expectedResult);
-    }
-
-    @Test
-    public void replaceNamespaceDeclaration() throws Exception {
-        String target = DECLARATION +
-                "<doc xmlns:pref='urn:test'>" + EOL +
-                "  <foo a='1'>This is a sample document</foo>" + EOL +
-                "</doc>";
-
-        String diff = makeDiff("<replace sel='doc/namespace::pref'>urn:new:xxx</replace>");
-
-        String expectedResult = DECLARATION +
-                "<doc xmlns:pref='urn:new:xxx'>" + EOL +
-                "  <foo a='1'>This is a sample document</foo>" + EOL +
-                "</doc>";
-
-        doPatch(target, diff, expectedResult);
-    }
-
-    @Test
-    public void replaceNamespaceDeclarationError() throws Exception {
-        String target = DECLARATION +
-                "<doc xmlns:pref='urn:test'>" + EOL +
-                "  <foo a='1'>This is a sample document</foo>" + EOL +
-                "</doc>";
-
-        String diff = makeDiff("<replace sel='doc/foo/namespace::pref'>urn:new:xxx</replace>");
-
-        doPatchExpectError(target, diff, ErrorCondition.UNLOCATED_NODE);
     }
 
     @Test

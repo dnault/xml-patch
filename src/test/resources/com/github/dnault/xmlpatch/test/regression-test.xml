@@ -98,31 +98,7 @@
         <diff><add sel="doc" type="namespace::pref"></add></diff>
         <result error="INVALID_NAMESPACE_URI"/>
     </test>
-    
-    <test desc="Replace namespace declaration URI">
-        <target><doc xmlns:pref="urn:test"><pref:foo a="1">sample</pref:foo></doc></target>
-        <diff><replace sel="doc/namespace::pref">urn:new:xxx</replace></diff>
-        <result><doc xmlns:pref="urn:new:xxx"><pref:foo a="1">sample</pref:foo></doc></result>
-    </test>
-    
-    <test desc="Replace namespace URI with empty string">
-        <target><doc xmlns:pref="urn:test"><pref:foo a="1">sample</pref:foo></doc></target>
-        <diff><replace sel="doc/namespace::pref"></replace></diff>
-        <result error="INVALID_NAMESPACE_URI"/>
-    </test>
-    
-    <test desc="Replace element's own namespace declaration URI">
-        <target><pref:doc xmlns:pref="urn:test"><pref:foo a="1">sample</pref:foo></pref:doc></target>
-        <diff><replace sel="*/namespace::pref">urn:new:xxx</replace></diff>
-        <result><pref:doc xmlns:pref="urn:new:xxx"><pref:foo a="1">sample</pref:foo></pref:doc></result>
-    </test>
-    
-    <test desc="Replace parent's namespace declaration URI">
-        <target><doc xmlns:pref="urn:test"><foo a="1">sample</foo></doc></target>
-        <diff><replace sel="doc/foo/namespace::pref">urn:new:xxx</replace></diff>
-        <result error="UNLOCATED_NODE"/>
-    </test>
-    
+
     <test desc="Replace namespace [unlocated]">
         <target><doc xmlns:pref="urn:test"><foo a="1">sample</foo></doc></target>
         <diff><replace sel="doc/namespace::bogus">urn:new:xxx</replace></diff>
@@ -296,21 +272,6 @@
         <target><doc> hello </doc></target>
         <diff><remove sel="doc/text()[1]"></remove></diff>
         <result><doc/></result>
-    </test>
-    
-    <test desc="Remove namespace declaration">
-        <target><doc xmlns:pref="urn:test"/></target>
-        <diff><remove sel="doc/namespace::pref"></remove></diff>
-        <result><doc/></result>
-    </test>
-    
-    <test desc="Remove in-use namespace declaration">
-        <!-- spec says of the node to be removed,
-             "this prefix MUST NOT be associated with any node
-              prior to the removal of this namespace node." -->
-        <target><doc xmlns:pref="urn:test"><pref:foo/></doc></target>
-        <diff><remove sel="doc/namespace::pref"></remove></diff>
-        <result error="INVALID_PATCH_DIRECTIVE"/>
     </test>
 
 </testCases>
